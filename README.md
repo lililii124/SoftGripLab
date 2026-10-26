@@ -58,6 +58,19 @@ or attachment joints. A zero-adhesion control remains on the table.
 The close-up replays the saved material mesh and measured robot joints at 1:1
 deformation scale. [Model, checks and replay data](docs/ADHESIVE_ROBOT.md).
 
+## 6 · Make three cuts with the Panda
+
+![Panda cutting the solved banana-shaped material into four connected components](docs/assets/06_banana_cutting.gif)
+
+The robot cuts a curved fruit surrogate three times. The **FEM mesh deforms under
+knife contact**, cohesive springs break, and connectivity changes from one body
+to four pieces. Joint motion and material reaction are coupled; each stroke
+continues from the previous material state. The close-up uses saved solver nodes.
+
+This uses an optional **DiSECt research backend** with a separate NVIDIA license.
+Material parameters are illustrative and the three fracture planes are planned
+in advance. [Model, controls, license and reproduction](docs/CUTTING.md).
+
 ## Run the scenes
 
 Python 3.11+, CPU only:
@@ -120,6 +133,7 @@ reference histories remain available as CSV through `adhesion`.
 | Bullet / PyBullet | Neo-Hookean tetrahedral FEM, finite contact, robot dynamics and depth-buffered rendering |
 | JAX-MPM | Bulk continuum dynamics, Dugdale surface traction, Hertz/JKR references, planar-jaw shock case |
 | SciPy | State-space integration and bounded material identification |
+| DiSECt (optional, research license) | Virtual-node FEM cutting, knife contact and cohesive damage |
 | pybullet_data | Panda URDF and robot meshes |
 | NumPy / Pillow / Matplotlib | Data processing, animation export and supplementary plots |
 
@@ -127,6 +141,7 @@ The contribution is the benchmark setup, solver adapters, observable contact
 checks and reproducible comparison workflow. It does not implement a new physics
 engine. Spatial convergence, experimental calibration and transfer of the fitted
 SLS law into the continuum scenes remain open work. Scene 4 uses a rigid cube;
-scene 5 couples the Panda to an elastic MPM object. [Roadmap](docs/ROADMAP.md).
+scene 5 couples the Panda to an elastic MPM object; scene 6 adds planned sequential
+cutting of an uncalibrated fruit surrogate. [Roadmap](docs/ROADMAP.md).
 
 [GPL-3.0](LICENSE) · [Third-party attribution](NOTICE).

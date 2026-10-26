@@ -1,0 +1,8 @@
+{
+  "trajectory_sha256": "189f8253f6bd0404f7ef0181970c267b01f4c0ec6fcc15973678ed64b9fea246",
+  "frames": 64,
+  "deformation_scale": 1.0,
+  "max_replayed_tool_center_error_m": 0.0,
+  "geometry": "saved FEM and interpolated virtual boundary nodes; measured robot joints",
+  "renderer": "PyBullet TinyRenderer"
+}

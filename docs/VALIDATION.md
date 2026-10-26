@@ -146,3 +146,12 @@ See [results/animations/](results/animations/) for CSVs, settings and replay NPZ
 The software stack uses Bullet's existing FEM and articulated-body solvers,
 JAX-MPM's existing continuum/contact code, and the upstream Panda asset. No
 experimental material calibration or real-robot validation is claimed.
+
+## Sequential cutting archive
+
+[The cutting validation](CUTTING.md#evidence-and-limits) records a complete
+three-cut rollout, a 0.5 s no-damage contact prefix and a 1.1 s half-step first-cut
+check. Tests independently reconstruct material connectivity, verify irreversible
+spring failure, positive element determinants, reference mass, fixed nodes and
+rendering provenance. These are numerical consistency checks, not experimental
+validation or spatial convergence evidence.

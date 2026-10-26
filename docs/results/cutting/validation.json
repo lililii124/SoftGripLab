@@ -1,0 +1,28 @@
+{
+  "nominal_duration_s": 4.2,
+  "no_damage_control_duration_s": 0.5,
+  "half_step_check_duration_s": 1.1,
+  "first_cut_completion_difference_s": 0.008333333333333304,
+  "nominal_trajectory_sha256": "189f8253f6bd0404f7ef0181970c267b01f4c0ec6fcc15973678ed64b9fea246",
+  "scope": "Complete nominal three-cut run; controls cover the stated prefixes only. No spatial convergence or experimental calibration claim.",
+  "public_setup_reproduction": {
+    "duration_s": 1.1,
+    "same_observables_within_1e_8": true,
+    "maximum_absolute_difference_by_column": {
+      "time_s": 0.0,
+      "knife_x_m": 0.0,
+      "knife_y_m": 0.0,
+      "knife_z_m": 0.0,
+      "reaction_x_n": 0.0,
+      "reaction_y_n": 0.0,
+      "reaction_z_n": 0.0,
+      "broken_cut_1": 0.0,
+      "broken_cut_2": 0.0,
+      "broken_cut_3": 0.0,
+      "min_det_f": 0.0,
+      "tracking_error_m": 0.0,
+      "connected_components": 0.0
+    },
+    "note": "Fresh clone and CPU compilation with tools/setup_disect.py; public CLI invocation."
+  }
+}

@@ -11,7 +11,7 @@ INK = "#292a28"
 GRAY = "#666760"
 
 
-def _mesh(p, cid, points, triangles):
+def _mesh(p, cid, points, triangles, color=(0.57, 0.40, 0.30, 1)):
     vertices = points[triangles]
     face_normal = np.cross(
         vertices[:, 1] - vertices[:, 0], vertices[:, 2] - vertices[:, 0]
@@ -25,7 +25,7 @@ def _mesh(p, cid, points, triangles):
         vertices=points.tolist(),
         indices=triangles.ravel().tolist(),
         normals=normals.tolist(),
-        rgbaColor=[0.57, 0.40, 0.30, 1],
+        rgbaColor=color,
         physicsClientId=cid,
     )
     return p.createMultiBody(0, -1, visual, physicsClientId=cid)

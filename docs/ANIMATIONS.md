@@ -97,3 +97,13 @@ use `mpm-adhesion` and `animate-adhesion` for resolved deformation.
 Upstream implementations: [Bullet FEM example](https://github.com/bulletphysics/bullet3/blob/master/examples/pybullet/examples/deformable_torus.py),
 [JAX-MPM](https://github.com/lililii124/jax-mpm),
 [Panda asset](https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_data/franka_panda).
+
+## Sequential robot cutting
+
+The sixth animation replays the solved FEM and cut-face geometry from three
+Panda knife strokes. [Setup, model and controls](CUTTING.md). To replay the
+committed data with PyBullet only:
+
+```bash
+python -m softgriplab animate-cutting --source docs/results/cutting/nominal
+```

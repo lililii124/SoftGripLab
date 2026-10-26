@@ -24,6 +24,16 @@
 - [x] Zero-adhesion control, airborne momentum balance and coupling-step comparison.
 - [x] Actual joint/mesh replay with tool-center consistency check.
 
+## v0.5 — sequential cutting
+
+- [x] Optional DiSECt CPU adapter with pinned external source and build instructions.
+- [x] Three measured Panda knife strokes with reaction-force feedback.
+- [x] Cut-volume integration preserving reference mass across virtual-node topology.
+- [x] Saved FEM and cut-face replay; independent connectivity check from 1 to 4 pieces.
+- [x] No-damage contact prefix and half-step first-cut sensitivity check.
+- [ ] Experimental force/fracture calibration and spatial convergence.
+- [ ] General fragment collision and fracture paths beyond prescribed planes.
+
 ## Next — one material model across identification and grasping
 
 - [ ] Reuse a supported upstream viscoelastic law or contribute it upstream;

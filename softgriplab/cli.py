@@ -114,6 +114,22 @@ def main(argv=None):
         "animate-adhesive-robot", help="Replay coupled robot and material states"
     )
     replay.add_argument("--source", type=Path, default=Path("outputs/adhesive_robot"))
+    cutting = commands.add_parser(
+        "banana-cutting",
+        help="Three sequential FEM cuts with the optional DiSECt research backend",
+    )
+    cutting.add_argument("--output", type=Path, default=Path("outputs/banana_robot"))
+    cutting.add_argument("--backend", type=Path)
+    cutting.add_argument("--dt", type=float, default=2e-5)
+    cutting.add_argument("--coupling-dt", type=float, default=1 / 120)
+    cutting.add_argument("--duration", type=float, default=4.2)
+    cutting.add_argument("--softening-rate", type=float, default=2.5e7)
+    cutting.add_argument("--fps", type=int, default=15)
+    cutting.add_argument("--no-render", action="store_true")
+    cut_replay = commands.add_parser(
+        "animate-cutting", help="Replay saved FEM cutting data; DiSECt is not required"
+    )
+    cut_replay.add_argument("--source", type=Path, default=Path("outputs/banana_robot"))
     args = parser.parse_args(argv)
     try:
         if args.command == "demo":
@@ -218,6 +234,29 @@ def main(argv=None):
                         grid=args.grid,
                         dt_factor=args.dt_factor,
                         coupling_dt=args.coupling_dt,
+                        fps=args.fps,
+                        render=not args.no_render,
+                    ),
+                    indent=2,
+                )
+            )
+        elif args.command == "animate-cutting":
+            from .advanced_render import render_banana_cutting
+
+            render_banana_cutting(args.source)
+            print(args.source / "banana_cutting.gif")
+        elif args.command == "banana-cutting":
+            from .backends.banana_cutting import run_banana_cutting
+
+            print(
+                json.dumps(
+                    run_banana_cutting(
+                        args.output,
+                        source=args.backend,
+                        dt=args.dt,
+                        coupling_dt=args.coupling_dt,
+                        duration_s=args.duration,
+                        softening_rate=args.softening_rate,
                         fps=args.fps,
                         render=not args.no_render,
                     ),

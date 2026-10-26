@@ -1,0 +1,10 @@
+# Optional research environment: Python 3.11, CPU only.
+# Install PyTorch first from its CPU index (see docs/CUTTING.md).
+numpy>=1.26,<2
+torch>=2.5,<2.14
+ninja>=1.11
+sty>=1.0
+munch>=4
+meshio>=5.3
+pandas>=2
+seaborn>=0.13

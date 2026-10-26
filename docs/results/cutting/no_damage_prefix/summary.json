@@ -1,0 +1,54 @@
+{
+  "backend": "DiSECt CPU FEM with PyBullet Panda",
+  "disect_commit": "ff90165070335bb8033000373d2d20c6aac13edd",
+  "young_pa": 50000.0,
+  "poisson": 0.3,
+  "density_kg_m3": 1000.0,
+  "reference_mass_kg": 0.07657045906174367,
+  "raw_virtual_node_mass_kg": 0.09822198467887766,
+  "integrated_reference_mass_kg": 0.07657045906174363,
+  "clamped_nodes": 50,
+  "tetrahedra": 2592,
+  "cutting_springs": 243,
+  "min_cut_volume_fraction": 0.12499999999812453,
+  "dt_s": 1.9984012789768184e-05,
+  "coupling_dt_s": 0.008333333333333333,
+  "duration_s": 0.5,
+  "softening_rate_n_m2_s": 0.0,
+  "ground_penalty_n_m": 10000.0,
+  "commanded_lowest_blade_tip_m": 0.00016000000000000042,
+  "completed_cut_times_s": [
+    null,
+    null,
+    null
+  ],
+  "final_broken_fractions": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "min_det_f": 0.2513904475684343,
+  "max_tracking_error_m": 0.007385034641022284,
+  "success": false,
+  "reaction_force_feedback": true,
+  "initial_connected_components": 1,
+  "final_connected_components": 1,
+  "limitations": [
+    "Homogeneous uncalibrated peeled-banana geometry; no peel, fibres or viscoelasticity.",
+    "Three planned cohesive planes; interfaces remain connected until knife-contact damage breaks their springs.",
+    "Opening-dependent softening, scaled by dt; not an experimentally fitted fracture-energy law.",
+    "End band is clamped; separated pieces retain state and remain free.",
+    "Upstream paired-interface contact; no general collision between arbitrarily rotated fragments.",
+    "Force-only partitioned robot feedback; no knife torque feedback or arm/material collision."
+  ],
+  "backend_source_sha256": {
+    "dflex/sim.py": "62f0e0375dbeeba10e861a3a760bd09772c2da5207f130bb1518c839a0272c88",
+    "dflex/model.py": "89fb7c093e760b6004f45e223edd94a02f9bf50cbcc1e9b4e8a57675cad5ffbc",
+    "dflex/adjoint.py": "665125ea968768c061410f13290ca998d0cbd7f26f796fda8e299607a0b3b904",
+    "cutting/cutting_sim.py": "d3b0eb75980451cadbe31a3b6fefc4727e2f16ec00ae3772e6a8eec29d5422f3",
+    "meshing/meshing.cpp": "91328709e0210c1f551ffd962039d9938ae3383a865bc423801459c38e8d9acc"
+  },
+  "provenance_note": "Hashes recorded from the unchanged backend used for these completed runs; topology metadata added after an identical-reference check.",
+  "max_support_node_penetration_m": 0.00013207113079261035,
+  "max_saved_surface_penetration_m": 1.9419218006078154e-05
+}

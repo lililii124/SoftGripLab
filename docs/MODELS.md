@@ -135,3 +135,12 @@ Parameters, controls, time-step comparison and limitations are recorded in
 - [SciPy least_squares](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html)
 - [Constitutive equations for finite-rate SLS loading, Polymers 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9143375/)
 - [JAX-MPM documentation](https://github.com/lililii124/jax-mpm/blob/main/docs/EXAMPLES.md)
+
+## Sequential cutting (optional research backend)
+
+[Scene 6](CUTTING.md) uses DiSECt virtual-node FEM with preinserted cohesive
+planes, opening-dependent knife-contact damage and mass-preserving cut-volume
+integration. Measured Panda knife poses drive the solver; mean material reaction
+returns to the arm. Three strokes produce four material components. Parameters
+are illustrative, the end is clamped, and general fragment collision is absent.
+DiSECt retains its separate NVIDIA research/evaluation license.
