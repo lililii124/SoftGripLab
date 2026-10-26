@@ -1,0 +1,33 @@
+{
+  "backend": "JAX-MPM",
+  "upstream_commit": "fd8ed2caa40a50d01992420660f68ae6ce0d084f",
+  "model": "Neo-Hookean bulk + upstream finite-range Dugdale surface traction",
+  "grid": 24,
+  "particles": 14700,
+  "frames": 101,
+  "dt_s": 5.909090909090909e-05,
+  "young_pa": 8000.0,
+  "poisson": 0.25,
+  "work_j_m2": 14.4,
+  "interaction_range_m": 0.0025,
+  "penalty_stiffness_pa_m": 48000000.0,
+  "radius_m": 0.016,
+  "max_penalty_step_number": 0.08744520301832555,
+  "min_det_f": 0.6234153635252973,
+  "max_surface_lift_m": 0.011195161579304731,
+  "minimum_reaction_n": -2.2908840525736243,
+  "maximum_penetration_m": 0.0008475353186583809,
+  "tensile_samples": 64,
+  "detached_at_end": true,
+  "loaded_source_sha256": {
+    "core.py": "4a3895ffe15ab28dd0981e94bb0be5f2030b12714f02feae5e917c706e6b71ae",
+    "adhesion.py": "12cda0bc77b95a8740245050bc2ae86b78018bd2642329efff3920cb8d9f9042",
+    "materials/elastic.py": "fbfaa811e5196c2fac7b38897cc6bc0f74c87a9df1f9bc9fa6d658b657657ff8"
+  },
+  "limitations": [
+    "Dry normal adhesion, not a vacuum cup or an identified sealing model.",
+    "Top material sampling layer is the contact surface; coarse particle resolution.",
+    "Fixed base, prescribed sphere path and no tangential surface traction.",
+    "Illustrative material/interface parameters; not experimental validation."
+  ]
+}

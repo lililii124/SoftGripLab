@@ -77,10 +77,10 @@ than a grid cell, so geometric contact error matters. These coarse scenes
 demonstrate backend integration and contact response; they are not calibrated
 predictions of a physical gripper's retention limit.
 
-[Supplementary MPM comparison plot](assets/mpm_comparison.png). The main gallery
-shows the actual particle-motion comparison as an animation.
+[Supplementary MPM comparison plot](assets/mpm_comparison.png). The original particle-section comparison remains available through `animate-grasp`;
+the main grasp animation now uses finite FEM jaws.
 
-## Automated checks
+## v0.1 automated checks (historical)
 
 - Base Python 3.11 environment: 15 reference/CLI tests pass; the optional MPM
   test is skipped when JAX-MPM is absent.
@@ -96,40 +96,53 @@ remote workflow has run or passed; consult the repository's Actions page.
 The v0.1.0 wheel was built and installed into an isolated target directory.
 The installed package's CLI reproduced the material fit from the committed CSVs.
 
-## v0.2 animation, adhesive contact and robot extension
+## v0.3 solver geometry and contact verification
 
-The four progressive gallery stages are documented in [ANIMATIONS.md](ANIMATIONS.md).
-The compression and MPM animations reuse the existing numerical evidence above.
+The main gallery now uses resolved deformable geometry. The earlier uniform
+compression sketch, JKR surface sketch and suction-joint robot demonstration
+are superseded. The independent Hertz/JKR numerical references remain tested.
 
-The new dry-adhesion example directly calls the pinned JAX-MPM `jkr_history`.
-With radius 10 mm, reduced modulus 100 kPa and work of adhesion 0.08 J/m²,
-the computed minimum force is -3.76905 mN, compared with the analytic stable-branch
-minimum -3.76991 mN. The cycle includes 28 sampled tensile-attachment states and
-ends detached. Tests also verify that zero work of adhesion recovers Hertz.
-The displacement-controlled detachment indentation is -29.869 µm; it is not
-the same criterion as load-controlled pull-off.
+| Case | Locally observed result |
+| --- | --- |
+| FEM compression, 1,764 tetrahedra | Height decreases from 40 mm to 30.407 mm; maximum width 54.483 mm |
+| FEM unloading | Final height 39.393 mm with gravity still applied |
+| FEM validity | Every-step minimum det(F): 0.7303 (compression), 0.6015 (grasp) |
+| FEM grasp | Maximum center height 50.976 mm, starting at 20.500 mm; no node anchors |
+| FEM zero friction, 600 tetrahedra | Maximum center height 21.005 mm; no meaningful lift |
+| MPM adhesion, 14,700 particles | Maximum surface uplift 11.195 mm; tensile sphere reaction reaches -2.291 N |
+| Same MPM path, no adhesion | Uplift at most 0.607 mm; no tensile reaction |
+| MPM cycle completion | Both cases end detached; all upstream validity checks pass |
+| Panda nominal | 100% bilateral contact during the checked airborne interval; no payload joint |
+| Panda contact geometry | Maximum penetration 0.182 mm in the nominal run |
+| Panda placement | Final center approximately (0.50004, 0.19373, 0.12499) m; target center (0.5, 0.18) m |
+| Panda zero friction | Center never rises above 0.12501 m; pickup fails |
 
-The PyBullet 3.2.7 Panda example uses a 50 g rigid cube, 12 mm suction radius,
-30 kPa pressure difference and 0.6 efficiency (8.143 N force capacity).
-The seal is acquired after confirmed contact; the robot lifts the cube center
-to approximately 0.354 m, moves it to the target and releases it. Final horizontal
-placement error is below 0.1 mm in this deterministic local run. This is simulator
-repeatability, not physical robot accuracy.
+The FEM contact margin is 0.3 mm. Comparing 600 with 1,764 tetrahedra changes
+maximum compression width by 0.146 mm (0.27%) and minimum height by 0.006 mm.
+Halving the time step at 1,764 tetrahedra changes maximum width by 0.007 mm and
+minimum height by 0.004 mm. Extrema are frame sampled, with 31 control frames
+versus 91 gallery frames; these checks do **not** establish asymptotic spatial
+convergence. Grasp/contact strain fields need further refinement.
 
-A 1 kPa control (0.271 N capacity) exceeds the conservative joint capacity during
-the preload phase and does not lift the cube. It is reported as failed, without
-teleporting or attaching the object for presentation. The initial state is reset
-once; all subsequent robot movement uses IK targets and joint motors.
+The MPM interface range is 2.5 mm and maximum penalty penetration in the adhesive
+case is 0.848 mm. Its local penalty step number is 0.0875. Deformation and traction
+respond to one another, but the contact is coarse and the parameters are
+illustrative. Pull-off loads are not presented as converged or calibrated values.
 
-Local checks for this extension:
+Local automated checks for this revision:
 
-- Python 3.11 / PyBullet: **22 passed, 2 optional-backend modules skipped**.
-- Python 3.12 / pinned JAX-MPM API: **24 passed, 1 optional-backend module skipped**.
-- These suites share reference tests; their counts must not be added together.
-- Additional tests cover seal prerequisites, pressure-area scaling, force/moment
-  overload, tensile attachment, zero-adhesion recovery, successful motor-driven
-  placement and the weak-suction failure control.
+- Python 3.11 / PyBullet: **25 passed, 3 optional MPM modules skipped**.
+- Python 3.12 / pinned MPM API: **4 selected backend tests passed**.
+- Checks include mesh volume and outward topology, compression bulging and
+  recovery, positive tetrahedral determinants, friction-dependent soft lift,
+  bilateral robot contact, zero-friction failure, and zero-adhesion/tensile controls.
 
-Animation metadata, adhesive history and robot trajectories are preserved in
-[results/animations/](results/animations/). A dedicated robot workflow runs the
-physics tests and renders its own demonstration on Linux.
+The renderer consumes saved coordinates at scale 1:1. FEM input hashes and the
+matched MPM trajectory hashes are checked by the gallery collector. Compact
+surface replay files retain the actual rendered float64 coordinates, topology,
+fixture/sphere poses and time samples. They omit unrendered interior particles.
+See [results/animations/](results/animations/) for CSVs, settings and replay NPZs.
+
+The software stack uses Bullet's existing FEM and articulated-body solvers,
+JAX-MPM's existing continuum/contact code, and the upstream Panda asset. No
+experimental material calibration or real-robot validation is claimed.

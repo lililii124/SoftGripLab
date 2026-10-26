@@ -7,18 +7,23 @@ from softgriplab.backends.robot import run_robot
 
 
 @pytest.mark.robot
-def test_motor_driven_pick_place_and_weak_suction_control(tmp_path):
+def test_friction_carries_payload_only_with_bilateral_contact(tmp_path):
     good = run_robot(tmp_path / "nominal", render=False)
-    weak = run_robot(tmp_path / "weak", pressure_pa=1000., render=False)
+    weak = run_robot(tmp_path / "frictionless", friction=0.0, render=False)
     assert good["pick_place_success"]
-    assert good["events"][0]["contact_confirmed"]
-    assert good["events"][0]["event"] == "seal_acquired"
-    assert good["events"][-1]["event"] == "commanded_release"
-    assert abs(good["events"][0]["gap_m"]) <= good["suction"]["seal_tolerance_m"]
-    assert good["max_payload_height_m"] > .25
+    assert good["payload_attachment_constraints"] == 0
+    assert good["events"][0]["event"] == "bilateral_contact"
+    assert good["airborne_bilateral_contact_fraction"] > 0.99
+    assert good["max_contact_penetration_m"] < 0.0008
+    assert good["max_payload_height_m"] > 0.30
     assert not weak["pick_place_success"]
-    assert any(event["event"] == "capacity_exceeded" for event in weak["events"])
-    assert weak["max_payload_height_m"] < .15
-    np.testing.assert_allclose(weak["final_payload_position_m"][:2], [.5, -.18], atol=.005)
-    trajectory = np.genfromtxt(tmp_path / "nominal/trajectory.csv", delimiter=",", names=True)
-    assert np.max(trajectory["tcp_tracking_error_m"]) < .02
+    assert weak["max_payload_height_m"] < 0.16
+    trajectory = np.genfromtxt(
+        tmp_path / "nominal/trajectory.csv", delimiter=",", names=True
+    )
+    assert np.max(trajectory["tcp_tracking_error_m"]) < 0.02
+    airborne = (trajectory["time_s"] > 3.5) & (trajectory["time_s"] < 6.0)
+    assert np.min(trajectory["left_normal_n"][airborne]) > 0.1
+    assert np.min(trajectory["right_normal_n"][airborne]) > 0.1
+    assert np.max(np.abs(trajectory["left_gap_m"][airborne])) < 0.0008
+    assert np.max(np.abs(trajectory["right_gap_m"][airborne])) < 0.0008

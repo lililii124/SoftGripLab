@@ -56,9 +56,7 @@ def run_adhesion(output, *, frames=151):
               "tensile_attachment_samples": int(np.count_nonzero(attached_in_tension)),
               "minimum_force_n": float(data["jkr_force_n"].min()),
               "detached_at_end": not bool(data["jkr_active"][-1]),
-              "geometry_display": "schematic local contact section; not a resolved displacement field",
+              "geometry_display": "no geometry: numerical reference only",
               "mechanism": "dry surface adhesion; not vacuum suction"}
     (output / "summary.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    from ..animations import render_adhesion
-    render_adhesion(data, output / "adhesion.gif")
     return report

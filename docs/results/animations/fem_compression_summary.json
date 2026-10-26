@@ -1,0 +1,29 @@
+{
+  "backend": "PyBullet 3.2.7 deformable FEM",
+  "scene": "compression",
+  "material": "compressible Neo-Hookean",
+  "young_pa": 15000.0,
+  "poisson": 0.35,
+  "density_kg_m3": 1000.0,
+  "mass_kg": 0.1,
+  "nodes": 448,
+  "tetrahedra": 1764,
+  "friction": 0.7,
+  "timestep_s": 0.001,
+  "steps": 3000,
+  "frames": 91,
+  "min_det_f_all_steps": 0.7302883611534212,
+  "collision_margin_m": 0.0003,
+  "initial_height_m": 0.04,
+  "minimum_height_m": 0.030406529257341,
+  "maximum_width_m": 0.05448271431057438,
+  "maximum_center_height_m": 0.020499999999999994,
+  "final_height_m": 0.03939332115976156,
+  "specimen_anchors": 0,
+  "render_deformation_scale": 1.0,
+  "limitations": [
+    "Prescribed rigid fixture displacement; no fixture actuator dynamics.",
+    "Coarse linear tetrahedra and 0.3 mm contact margin; refinement is reported separately.",
+    "Numerical damping 0.03; material values are illustrative, not identified rubber."
+  ]
+}

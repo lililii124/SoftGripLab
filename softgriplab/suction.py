@@ -1,4 +1,4 @@
-"""Conservative reduced suction capacity for the rigid-body robot demonstration.
+"""Independent conservative suction-capacity and seal-geometry calculations.
 
 This is a seal-gated breakable joint, not a fluid or deformable-cup solver.
 """

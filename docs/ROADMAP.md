@@ -8,12 +8,14 @@
 - [x] Existing MPM backend integration, planar jaws and base acceleration.
 - [x] Analytic and inference tests; optional continuum momentum check.
 
-## v0.2 — progressive animations and contact demonstrations (implemented)
+## v0.3 — solver geometry and observable contact
 
-- [x] Data-driven compression animation and side-by-side MPM trajectories.
-- [x] Upstream Hertz/JKR approach, tensile hold and pull-off cycle.
-- [x] Existing Panda robot with PyBullet motors, contact-gated suction and a weak-pressure control.
-- [x] Full-scene and tool close-up cameras; numerical traces retained as supporting evidence.
+- [x] Volumetric Neo-Hookean FEM compression, recovery and finite-jaw grasp.
+- [x] Saved solver meshes rendered at 1:1 scale with correct depth occlusion.
+- [x] Upstream Dugdale tractions coupled to actual MPM surface deformation.
+- [x] Panda bilateral frictional grasp, joint motors and contact close-up.
+- [x] Zero-friction / zero-adhesion controls and replayable surface data.
+- [x] Neutral engineering colors; synthetic geometry removed from the main gallery.
 
 ## Next — one material model across identification and grasping
 
@@ -25,7 +27,7 @@
 - [ ] Measured compression/sliding records with provenance and redistribution rights.
 - [ ] Propagate material/friction uncertainty into grasp decisions.
 
-## v0.3 — finite fingers and protective pads
+## Next — articulated deformable grasp and protective pads
 
 - [ ] Extend the existing PyBullet Panda demo to deformable pads and finite contact.
 - [ ] Reuse existing deformable contact for finger pads and localized impactors.

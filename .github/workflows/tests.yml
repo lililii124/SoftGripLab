@@ -14,7 +14,6 @@ jobs:
       - run: python -m pip install '.[test]'
       - run: python -m pytest -q
       - run: python -m softgriplab demo --output outputs/demo
-      - run: python -m softgriplab animate-compression --source outputs/demo --output outputs/demo/compression.gif
       - uses: actions/upload-artifact@v4
         with:
           name: reference-${{ matrix.python }}

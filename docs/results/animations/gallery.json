@@ -1,38 +1,62 @@
 {
   "01_compression": {
+    "frames": 91,
+    "pixels": [
+      960,
+      560
+    ],
+    "sha256": "84cf22ee75ada8d2beee9dff36b40def39bdd036f1681732c33715126e4c83a8",
+    "bytes": 2338402
+  },
+  "02_adhesion": {
     "frames": 101,
     "pixels": [
       960,
-      600
+      560
     ],
-    "sha256": "7e3de4f1da130ec532e3eea4c595a96379c53839e63652628d89bbd355dad0b3",
-    "bytes": 2584160
-  },
-  "02_adhesion": {
-    "frames": 151,
-    "pixels": [
-      960,
-      600
-    ],
-    "sha256": "6ee2ad98f7d4ad94f7f0207f9e446344c9c01e5673c001bdf0009fd89c80122e",
-    "bytes": 3518684
+    "sha256": "9027d7ea85810a899da4d5268135b52657c60fe4cdc4679e40e46d24bfbee15e",
+    "bytes": 3472524
   },
   "03_grasp": {
-    "frames": 41,
+    "frames": 91,
     "pixels": [
       960,
-      600
+      560
     ],
-    "sha256": "34cac72be73bfa1d4d2540cdc9f7203f3498b93fbde50847b4ff1b5384668090",
-    "bytes": 1066033
+    "sha256": "f25f7ebbae83263993ee49e17807be282edfcf1e58f87d49c2dbe06c239460f4",
+    "bytes": 2588059
   },
   "04_robot": {
     "frames": 136,
     "pixels": [
-      800,
-      625
+      960,
+      560
     ],
-    "sha256": "4eb1dbd2e4f132b4c7484a4624a90d91110ece9d83655d2f0c8081d0fdf9a54b",
-    "bytes": 3766003
+    "sha256": "96995bbbdc3a58fa55742b810b1602a2ce5f1b14b1be91f40ecc3fedffb74d58",
+    "bytes": 3877603
+  },
+  "fem_compression_surface": {
+    "sha256": "4447b723c6d72193f28cf3491bfed832445313b520dde5c7ee74dff564de2dd1",
+    "bytes": 533861,
+    "surface_nodes": 268,
+    "frames": 91
+  },
+  "fem_grasp_surface": {
+    "sha256": "fee5a4650e17de8b3e05fbae7af766a2a28d6865984314ac8eb58ce54fe0b0a6",
+    "bytes": 547762,
+    "surface_nodes": 268,
+    "frames": 91
+  },
+  "continuum_adhesion_surface": {
+    "sha256": "271c2e4d4e3611c334fc873f80aee161632e30902a81a0913073d8539bc6baa2",
+    "bytes": 4487698,
+    "surface_nodes": 3810,
+    "frames": 101
+  },
+  "continuum_nonadhesive_surface": {
+    "sha256": "a5d5f11bfe36901c72700404dd9d6758b2503dbd098e4ee86a3f18636c56bde5",
+    "bytes": 4149472,
+    "surface_nodes": 3810,
+    "frames": 101
   }
 }

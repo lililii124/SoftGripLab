@@ -73,19 +73,51 @@ indicator. `validate_state` runs at every saved frame; upstream state validity
 accumulates every integration step. The exported minimum determinant is sampled
 at frames and is labeled accordingly.
 
-## Adhesion and robot suction
+## Volumetric FEM scenes
 
-The v0.2 contact gallery delegates Hertz/JKR evaluation and attachment history
-to `mpm_jax.contact_laws`. It uses work of adhesion in J/m² and reduced modulus
-E*, with separate load-controlled force minimum and displacement-controlled
-detachment criteria. The renderer does not solve a surface displacement field.
+Bullet's deformable world integrates a compressible Neo-Hookean solid on a
+structured tetrahedral mesh. Young's modulus is 15 kPa, Poisson ratio 0.35,
+density 1000 kg/m³ and block dimensions 50 × 50 × 40 mm. The default mesh has
+448 nodes and 1,764 positive-volume tetrahedra. Lamé constants are passed to the
+upstream solver. The numerical damping setting is 0.03 and contact margin 0.3 mm.
 
-The robot example uses PyBullet's Panda model and a pressure-capacity-limited
-fixed constraint, acquired only after contact and seal-geometry checks. The
-payload is rigid. Force and moment limits, the one-step trial-constraint
-overshoot, and the distinction from dry adhesion are documented in
-[ANIMATIONS.md](ANIMATIONS.md). These scenes are separate model levels, not a
-coupled material-to-robot solver.
+Compression prescribes a finite upper platen's displacement and then unloads it.
+The grasp uses two finite rectangular jaws, gravity and Coulomb friction, followed
+by jaw opening. Both fixture positions and velocities are prescribed. The latter
+is essential to transmit tangential friction during lifting. Specimen nodes have
+no anchors. The deformation gradient of each tetrahedron is computed from its
+current and reference edge matrices; its determinant is checked at every step.
+Surface rendering reads the saved nodes and topology without shape interpolation.
+
+## Continuum adhesive contact
+
+The main adhesion scene uses the pinned upstream `DugdaleLaw`, `SpherePath` and
+`sphere_interaction`. On the current top material sampling layer, a negative gap
+gives penalty repulsion, a gap between zero and the finite interaction range gives
+attractive traction, and a gap outside the range gives no traction. Forces are
+integrated using reference surface areas and supplied to `mpm_jax.step`.
+The bulk response changes the gaps at the next step, closing the mechanics loop.
+
+The matched comparison uses E=8 kPa, nu=0.25, a 16 mm sphere, work of adhesion
+0 or 14.4 J/m², interaction range 2.5 mm and penalty stiffness 48 MPa/m. The base
+is fixed, gravity is zero, and the sphere follows a prescribed indentation,
+withdrawal, hold and final lift trajectory. Tangential adhesive traction is absent.
+This finite-range dry-interface model is not a vacuum seal or calibrated material.
+`adhesion` retains the independent analytical Hertz/JKR cycle as CSV only.
+
+## Articulated robot contact
+
+The Panda scene closes two real finger joints on a 50 mm, 50 g rigid cube. The
+arm and fingers use position motors; a 4 N motor limit is set for each finger.
+The object friction coefficient is 0.8 and finger coefficient is 1.0. No payload
+attachment joint or collision exclusion is created. The demo records both normal
+forces and signed contact distances at every step, and checks continuous bilateral
+contact during lift/transfer. The zero-friction control fails to lift.
+
+The robot payload is rigid. This scene and the FEM grasp have different objects,
+controllers and contact discretizations; they are not a coupled soft-robot model.
+The reduced `SuctionSpec` capacity utility remains available for unit calculations,
+but it is no longer used to animate a robot attachment.
 
 ## References
 

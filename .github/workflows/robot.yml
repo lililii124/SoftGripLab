@@ -1,4 +1,4 @@
-name: Robot suction demo
+name: Contact and deformation demos
 on: [push, pull_request, workflow_dispatch]
 jobs:
   robot:
@@ -10,9 +10,12 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install '.[robot,test]'
-      - run: python -m pytest -q tests/test_suction.py tests/test_robot.py
+      - run: python -m pytest -q tests/test_suction.py tests/test_robot.py tests/test_fem.py
       - run: python -m softgriplab robot-demo --output outputs/robot
+      - run: python -m softgriplab fem-demo --cells 5 --output outputs/fem_compression
       - uses: actions/upload-artifact@v4
         with:
-          name: panda-suction-demo
-          path: outputs/robot/
+          name: contact-deformation-demos
+          path: |
+            outputs/robot/
+            outputs/fem_compression/

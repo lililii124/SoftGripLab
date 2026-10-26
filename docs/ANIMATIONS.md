@@ -1,76 +1,99 @@
-# Animation gallery and reproduction
+# Reproduce the simulation gallery
 
-The main gallery goes from a material record to a contact law, a deformable
-grasp, and an articulated robot. Every animation is linked to its data source.
-Numbers and force indicators accompany the scene; standalone curves live in
-the supplementary validation files.
+All four primary animations use solver geometry. Surface rendering runs after
+FEM/MPM simulation, reads saved node coordinates, and uses a depth buffer. It
+never rescales deformation or prescribes a specimen shape. The robot camera
+captures the actual PyBullet state, with a simultaneous finger close-up.
 
-| Stage | Data / engine | Geometry in the animation |
+| Scene | Solver and contact | Saved geometry |
 | --- | --- | --- |
-| 01 Compression | Saved synthetic ramp/hold CSVs | Uniform-strain specimen illustration, constant loaded area |
-| 02 Adhesion | Upstream Hertz/JKR displacement-controlled contact history | Local surface sketch; radius, force and attachment are computed |
-| 03 Grasp | Existing 3D Neo-Hookean MPM trajectories | Central section of actual particle coordinates, colored by Green strain norm |
-| 04 Robot | PyBullet Panda URDF, motor control and rigid-body dynamics | Two simulator cameras, full robot and live tool/payload close-up |
+| Compression | Bullet Neo-Hookean tetrahedral FEM; finite platens | Actual nodes, tetrahedra and boundary triangles |
+| Adhesion | JAX-MPM + upstream Dugdale surface traction | Advected particle surface and sphere position |
+| Soft grasp | Bullet FEM; finite jaws, friction and gravity | Actual nodes and fixture positions; no anchors |
+| Panda | PyBullet articulated rigid dynamics; finger collision and friction | Joint states, payload pose and measured contacts |
 
-## Commands
+## Generate the gallery
 
 ```bash
-python -m softgriplab demo --output outputs/demo
-python -m softgriplab animate-compression --source outputs/demo
-
-# Python 3.12+, optional JAX-MPM backend
-python -m softgriplab adhesion --output outputs/adhesion
-python -m softgriplab mpm-grasp --output outputs/mpm
-python -m softgriplab mpm-grasp --friction 0 --output outputs/mpm_frictionless
-python -m softgriplab animate-grasp --source outputs/mpm --comparison outputs/mpm_frictionless
-
-# Optional PyBullet backend
+# Python 3.11+; FEM, robot, and offline rendering
+python -m pip install '.[robot,test]'
+python -m softgriplab fem-demo --output outputs/fem_compression
+python -m softgriplab fem-demo --scene grasp --output outputs/fem_grasp
 python -m softgriplab robot-demo --output outputs/robot
-python -m softgriplab robot-demo --pressure-pa 1000 --no-render --output outputs/robot_weak
+python -m softgriplab robot-demo --friction 0 --no-render --output outputs/robot_frictionless
 
-# After generating the four gallery inputs above
+# Python 3.12+; pinned upstream MPM backend
+python -m pip install '.[mpm]'
+python -m softgriplab mpm-adhesion --output outputs/continuum_adhesion
+python -m softgriplab mpm-adhesion --work 0 --output outputs/continuum_nonadhesive
+
+# In an environment containing PyBullet, after both MPM trajectories exist
+python -m softgriplab animate-adhesion
+```
+
+Additional controls and refinement probes used for the committed evidence:
+
+```bash
+python -m softgriplab fem-demo --scene grasp --cells 5 --frames 31 --friction 0 --no-render --output outputs/fem_grasp_zero
+python -m softgriplab fem-demo --cells 5 --frames 31 --no-render --output outputs/fem_compression_coarse
+python -m softgriplab fem-demo --dt .0005 --frames 31 --no-render --output outputs/fem_compression_halfdt
 python tools/collect_animations.py
 ```
 
-The collector copies GIFs and preview images to `docs/assets/` and stores
-simulation summaries and contact/robot CSVs under `docs/results/animations/`.
-It verifies each GIF has multiple frames and checks the nominal/weak robot
-outcomes and adhesive detachment before updating the gallery manifest.
+The collector checks contact outcomes, deformation validity and render input
+hashes before replacing the gallery. It copies summaries, CSV observations and
+compact surface replay files to `docs/results/animations/`. Replay files contain
+the unscaled surface coordinates used to render, along with topology and time.
+Full solver states remain in `outputs/`; the MPM surface replay omits interior
+particles and their fields to keep the repository small.
 
-The time labels show the source/simulation time. GIF playback can be slowed to
-make fast dynamics visible. Rendering does not advance the physics. In the robot
-log, the time label is the control-step start and the state is captured after
-that step (1/240 s). Camera settings and overlays do not affect the dynamics.
+Replay a committed surface without rerunning its solver:
 
-## Adhesion is not suction
+```bash
+python tools/replay_surface.py docs/results/animations/fem_grasp_surface.npz --output outputs/replay.gif
+```
 
-JKR describes a small dry adhesive sphere/half-space contact using work of
-adhesion and reduced elastic modulus. This demo carries attachment state during
-approach and retraction and holds briefly in the tensile regime. It does not
-model a vacuum chamber or leakage.
+This produces the 3D surface view. Interior FEM section nodes are present in the
+full trajectory, but are omitted from the compact surface-only replay.
 
-The robot demo uses a reduced vacuum-gripper joint. A detected contact,
-approximately aligned surface normal and full cup footprint are required to
-acquire a seal. A fixed trial constraint supplies the demand wrench. It breaks
-if the conservative force norm exceeds `efficiency * pressure * pi * radius²`
-or the moment norm exceeds that force times half the cup radius. Thus even a
-large compressive preload can break this conservative approximation; it is not
-a full anisotropic suction/contact law. The weaker-pressure run breaks during
-the contact/preload phase, not after a successful airborne lift.
+## Rendering and interpretation
 
-The trial constraint is removed on the next control step, allowing a one-step
-capacity overshoot. No compliant cup, fluid dynamics, leakage, inferred seal
-quality or deformable payload is simulated. The Panda path is scripted; inverse
-kinematics and joint motors execute it. This is a robot demonstration with
-explicit model limits, not a hardware-validated grasp policy.
+`fem-demo --no-render` only solves; `animate-compression --source PATH` subsequently
+renders either a compression or grasp FEM directory. The legacy command name is
+retained for compatibility, but it no longer draws synthetic uniform strain.
+`animate-adhesion` renders the two saved continuum trajectories without importing
+JAX. The robot uses PyBullet's existing Panda meshes and CPU camera.
 
-## Keep source and model attribution visible
+Use the time printed on the frame: 3 s of FEM motion plays over about 4.5 s;
+0.13 s of MPM pull-off plays over about 5 s to expose the contact sequence.
+Robot playback is approximately real time. Robot trace timestamps describe the
+state after each integration step. Grey tools and muted rubber colors identify
+materials; they do not encode strain or damage. No rainbow field is implied.
 
-Do not present the homogeneous specimen sketch or JKR surface sketch as a
-resolved displacement field. Do not treat the separate MPM and robot scenes as
-one coupled model. The renderer loads the upstream Panda asset through
-`pybullet_data`; the robot is not hand-drawn or animated through resets.
+The MPM display connects the outside material sampling layers. Their initial
+surface lies half a particle spacing inside the prescribed continuum block;
+this is also the surface used by the adhesive interaction. The finite attraction
+range is 2.5 mm. It is a coarse dry-adhesion demonstration, not a resolved vacuum
+cup seal, analytical JKR solution, or converged pull-off prediction.
 
-Upstream: [JAX-MPM](https://github.com/lililii124/jax-mpm),
-[PyBullet](https://github.com/bulletphysics/bullet3),
+FEM tools are prescribed kinematic boundaries. A zero-mass Bullet fixture is
+advanced from its previous pose with the corresponding velocity; saved poses
+are read back from Bullet and checked against the intended boundary condition.
+This supplies both the normal displacement and tangential velocity required by
+friction. Specimen nodes are never reset or attached to tools.
+
+The robot uses joint motors after its initial configuration. Both finger contact
+forces must remain positive while the cube is airborne. Payload collisions stay
+enabled and there is no payload attachment constraint. A 0-friction control
+must fail to lift. The robot object is rigid and is separate from the FEM model.
+
+## Earlier command changes
+
+`robot-demo --pressure-pa` was replaced by `--friction` and `--finger-force-n`.
+The earlier suction-joint demonstration and schematic deformation animations
+were removed. `adhesion` now exports only the numerical Hertz/JKR reference CSV;
+use `mpm-adhesion` and `animate-adhesion` for resolved deformation.
+
+Upstream implementations: [Bullet FEM example](https://github.com/bulletphysics/bullet3/blob/master/examples/pybullet/examples/deformable_torus.py),
+[JAX-MPM](https://github.com/lililii124/jax-mpm),
 [Panda asset](https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_data/franka_panda).

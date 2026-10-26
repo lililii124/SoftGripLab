@@ -1,0 +1,40 @@
+{
+  "backend": "PyBullet 3.2.7",
+  "model": "pybullet_data/franka_panda/panda.urdf",
+  "payload": "rigid 50 mm cube, mass 0.05 kg",
+  "friction": 0.0,
+  "finger_motor_force_n": 4.0,
+  "payload_attachment_constraints": 0,
+  "events": [
+    {
+      "event": "bilateral_contact",
+      "time_s": 2.0875000000000004,
+      "normal_force_n": [
+        0.8594423338837276,
+        0.8388017500997825
+      ],
+      "signed_distance_m": [
+        0.0001099669721351115,
+        0.00012473046085703654
+      ]
+    }
+  ],
+  "max_payload_height_m": 0.1250046491809081,
+  "final_payload_position_m": [
+    0.46059053663649646,
+    -0.171269213735746,
+    0.12498999575418034
+  ],
+  "pick_place_success": false,
+  "airborne_bilateral_contact_fraction": 0.0,
+  "airborne_steps": 0,
+  "max_contact_penetration_m": 0.0007572245851426594,
+  "timestep_s": 0.004166666666666667,
+  "render_fps": 15.0,
+  "recorded_frames": 136,
+  "limitations": [
+    "Rigid payload; deformation is covered by the separate tetrahedral FEM scene.",
+    "Scripted Cartesian path, numerical IK, joint motors and Coulomb contact.",
+    "URDF collision meshes and visible meshes are distinct; solver permits small penetration."
+  ]
+}
