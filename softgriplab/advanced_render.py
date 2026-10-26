@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw
 from .animations import font, save_frames
 from .mesh_render import BG, GRAY, INK, _box, _camera, _mesh
 from .force_inset import force_inset
+from .provenance import text_sha256
 
 
 def render_adhesive_robot(source, *, fps=15):
@@ -103,10 +104,9 @@ def render_adhesive_robot(source, *, fps=15):
                 ).hexdigest(),
                 "deformation_scale": 1.0,
                 "geometry": "saved material surface nodes and measured Panda joints",
-                "force_trace_sha256": hashlib.sha256(
-                    (source / "observables.csv").read_bytes()
-                ).hexdigest(),
+                "force_trace_sha256": text_sha256(source / "observables.csv"),
                 "force_component": "-reaction_z_n",
+                "force_trace_hash_normalization": "CRLF to LF",
                 "text_overlays": False,
                 "max_replayed_tool_center_error_m": max_pose_error,
                 "frames": len(frames),

@@ -8,6 +8,7 @@ from .animations import save_frames
 from .mesh_render import BG, _box, _mesh, _camera
 from .particle_surface import particle_surface
 from .force_inset import force_inset
+from .provenance import text_sha256
 
 
 def render_cutting(source, fps=20):
@@ -112,10 +113,9 @@ def render_cutting(source, fps=20):
         trajectory_sha256=hashlib.sha256(
             (source / "trajectory.npz").read_bytes()
         ).hexdigest(),
-        force_trace_sha256=hashlib.sha256(
-            (source / "observables.csv").read_bytes()
-        ).hexdigest(),
+        force_trace_sha256=text_sha256(source / "observables.csv"),
         force_component="reaction_z_n",
+        force_trace_hash_normalization="CRLF to LF",
         text_overlays=False,
         frames=len(frames),
         deformation_scale=1,

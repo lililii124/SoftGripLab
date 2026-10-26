@@ -8,9 +8,10 @@
   "renderer": "PyBullet TinyRenderer, depth buffer",
   "geometry": "saved outer material sampling layers; no shape interpolation",
   "force_trace_sha256": [
-    "7e0c430f96656e247fe8a81dd2efd4437354d2ea03023b48ec380d54772a6e1c",
-    "d0dcb2054b8371ce7da46f46c7ec3de7631820f1a94cf3169ebe50ccea668964"
+    "1e061852461110cf8ac332cf8b5cb9e22fd6239e0c7cb749ecf8ee8e43bbeb6c",
+    "638d2680357e96270be0d86ac593dea9429472c80e9c4d9c03c22710f6deb9dc"
   ],
   "force_component": "sphere_reaction_n",
-  "text_overlays": false
+  "text_overlays": false,
+  "force_trace_hash_normalization": "CRLF to LF"
 }

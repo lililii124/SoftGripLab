@@ -74,10 +74,10 @@ def test_render_provenance_and_time_step_sensitivity():
         ("trajectory_sha256", "trajectory.npz"),
         ("force_trace_sha256", "observables.csv"),
     ]:
-        assert (
-            report[key]
-            == hashlib.sha256((ROOT / "nominal" / name).read_bytes()).hexdigest()
-        )
+        data = (ROOT / "nominal" / name).read_bytes()
+        if name.endswith(".csv"):
+            data = data.replace(b"\r\n", b"\n")
+        assert report[key] == hashlib.sha256(data).hexdigest()
     assert not report["geometry_uses_knife_path"] and not report["text_overlays"]
     assert (
         report["deformation_scale"] == 1

@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 from .animations import font, save_frames
 from .force_inset import force_inset
+from .provenance import text_sha256
 
 BG = "#f5f4f0"
 INK = "#292a28"
@@ -223,12 +224,10 @@ def render_adhesion_pair(source, comparison, output):
                     for folder in folders
                 ],
                 "force_trace_sha256": [
-                    hashlib.sha256(
-                        (folder / "observables.csv").read_bytes()
-                    ).hexdigest()
-                    for folder in folders
+                    text_sha256(folder / "observables.csv") for folder in folders
                 ],
                 "force_component": "sphere_reaction_n",
+                "force_trace_hash_normalization": "CRLF to LF",
                 "text_overlays": False,
                 "deformation_scale": 1.0,
                 "frames": len(frames),

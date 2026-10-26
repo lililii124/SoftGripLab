@@ -166,3 +166,4 @@ cut. Disabling both severing and stretch failure preserves a contacted intact bo
 Both tested time steps complete the three cuts, but fragment mass and contact
 impulse remain sensitive to the time step; no converged force prediction is claimed.
 Render hashes tie the animation and its force inset to the saved observations.
+CSV checksums normalize CRLF to LF so the same record verifies on Windows and Unix.

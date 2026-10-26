@@ -1,6 +1,6 @@
 {
   "trajectory_sha256": "dec8f1aa51fbb8525e31c34fb61f2649a253badc49dd232afc0ceeb7329435c2",
-  "force_trace_sha256": "a6289bd09cf7b50a9f9630321eccd25c622078005e78819bd1c45024233b624b",
+  "force_trace_sha256": "b18a0b71dffa08425df2606702fdeca9c863da0cdbfa7239ae6c028fe0911fdd",
   "force_component": "reaction_z_n",
   "text_overlays": false,
   "frames": 85,
@@ -12,5 +12,6 @@
   "density_isovalue": 0.4,
   "geometry_uses_knife_path": false,
   "sparse_fragments": "contact-radius spheres; no components discarded",
-  "renderer": "PyBullet TinyRenderer"
+  "renderer": "PyBullet TinyRenderer",
+  "force_trace_hash_normalization": "CRLF to LF"
 }
