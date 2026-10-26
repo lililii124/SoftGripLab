@@ -1,54 +1,54 @@
-# Adhesive robot / deformable payload
+# Experimental acceleration-driven pull-off
 
-The Panda presses, engages adhesion, lifts, carries, sets down and releases a
-30 mm elastic block with mass 27 g. The animation replays MPM material positions
-and measured PyBullet joints at deformation scale 1:1. Rendering checks that the
-visible tool center agrees with the contact center to within 1 micrometre.
+**Status:** a successful inertial release has not yet been validated. The gallery
+and default command retain the [verified switch-release case](ADHESIVE_ROBOT_SWITCH.md).
+The commands below are investigation cases, not completed demonstrations.
 
-## Model
+The experimental adapter commands the Panda to press a spherical head onto a 27 g elastic block, lift and carry it, then accelerate upward. Adhesion stays enabled throughout withdrawal.
+JAX-MPM solves material deformation and contact; the renderer replays saved
+material coordinates and measured robot joints at deformation scale 1:1.
+
+## Mechanics
+
+For a payload following an upward acceleration a, the required resultant support
+is approximately m(g+a). In the deformable model, interface force and payload
+acceleration are solved. Detachment occurs when the material surface leaves the
+finite attraction range. Upward movement alone does not guarantee release.
+
+The 40 mm withdrawal command has constant positive acceleration for half its
+duration, followed by braking. For duration T, the command magnitude is 4H/T².
+Motor dynamics and the material reaction affect the actual motion. Every coupling
+step records head position, velocity and acceleration, together with payload
+velocity, interface gap, active contact samples and reaction force.
 
 | Quantity | Value |
 | --- | --- |
-| Elastic model | Neo-Hookean, E = 12 kPa, Poisson ratio 0.3 |
-| Density | 1,000 kg/m3 |
-| Particles / grid | 4,096 / 32 cubed over a 180 mm domain |
-| Head radius | 18 mm |
-| Adhesion work / effective range | 6 J/m2 / 0.8 mm |
-| Contact penalty | 48 MPa/m |
-| Robot coupling step | 1/120 s |
-| MPM substep | 49.31 microseconds, 169 per robot step |
-| Floor | z = 30 mm, grid-wall friction coefficient 0.5 |
+| Bulk | Neo-Hookean; E = 12 kPa; nu = 0.3; density 1,000 kg/m³ |
+| Payload | 30 mm cube; weight 0.26487 N; gravity on; no anchors |
+| Head | Sphere, radius 18 mm |
+| Interface | Dugdale dry adhesion; effective range 0.8 mm |
+| Compression | Penalty stiffness 48 MPa/m; always active |
+| Mesh | 40³ background grid; exact particle count in each summary |
 
-Each robot step uses the previous interval's average material reaction. Measured
-start and end tool centers define a linear path over the MPM substeps. Upstream
-Dugdale traction acts on the current positions of the original top material
-sampling layer. Equal and opposite forces load the next robot step. No material
-positions are prescribed or reset; the payload has gravity and no anchors.
+Adhesion engages only after compressive contact. In inertial mode its parameters
+remain fixed and its activation remains on. Leaving the attraction range gives
+zero force through the contact law itself. Each fast/slow pair uses the same interface parameters from the start.
+The 2 J/m² trial failed to lift; it is not evidence of inertial release.
+The 3 J/m² dense-grid trials were rejected by the state validator.
+The stronger 6 J/m², grid-32 trials remained attached during withdrawal. These are illustrative parameters, without experimental calibration.
+The model does not include a vacuum seal, leakage or irreversible interface damage.
 
-Adhesion can engage only after compressive contact. It is enabled from 1.25 s
-and disabled at 5.05 s; repulsive contact stays active. This ideal switchable
-cohesive interface does not model vacuum, sealing, electrostatics or curing.
-The 0.8 mm range is an effective model parameter, not a measured microscopic
-adhesion length. Elastic and interface parameters are illustrative.
+## Checks
 
-## Recorded checks
+A successful inertial-release demonstration must first carry the block clear of
+the table, maintain adhesive activation, then open the interface beyond its
+attraction range and reach zero head force. The matched weak-acceleration case
+must remain attached. Halving the coupling step checks the release outcome.
+During free flight, integrated interface force and gravity are compared with the
+payload momentum change. Floor-contact intervals are excluded from that balance.
 
-Contact starts at 1.167 s. The center of mass rises from 45.0 to 96.54 mm and is
-released within approximately 1.1 mm of the target. During 2.8-3.8 s, every saved
-coupling step has active adhesion and the whole material clears the floor. Mean
-upward contact force is 0.26486 N, compared with a 0.26487 N weight. Final contact
-force is zero. The zero-work control makes the same initial compressive contact
-and stays near its starting position.
-
-Minimum sampled det(F) is 0.763; maximum contact penetration is 0.473 mm. The CSV
-allows free-flight momentum change to be checked against integrated head force
-and gravity. Floor-contact intervals are excluded from that balance check.
-
-Halving the coupling step to 1/240 s preserves success. Peak height differs by
-less than 0.001 mm and final center position by less than 0.02 mm. This checks one
-coupling step on one grid; it does not establish spatial convergence or real
-robot performance. Only the head exchanges contact with MPM. The floor has grid
-discretization error, and the elastic body does not inherit the separate SLS fit.
+Robot motion is simulated, not a hardware-qualified trajectory. Only the head
+exchanges contact with MPM, and the partitioned reaction has one interval of lag.
 
 ## Reproduce
 
@@ -56,19 +56,16 @@ Use Python 3.12+ and the pinned JAX-MPM dependency:
 
 ```bash
 python -m pip install '.[mpm,robot]'
-python -m softgriplab adhesive-robot --output outputs/adhesive_robot
-python -m softgriplab adhesive-robot --work 0 --no-render --output outputs/adhesive_robot_control
-python -m softgriplab adhesive-robot --coupling-dt 0.004166666666666667 --no-render --output outputs/adhesive_robot_fine
+python -m softgriplab adhesive-robot --release-mode inertial --grid 40 --work 4 --dt-factor .5 --release-duration .04 --output outputs/adhesive_fast
+python -m softgriplab adhesive-robot --release-mode inertial --grid 40 --work 4 --dt-factor .5 --release-duration 1.2 --output outputs/adhesive_slow
+python -m softgriplab adhesive-robot --release-mode inertial --grid 40 --work 4 --dt-factor .5 --coupling-dt 0.004166666666666667 --no-render --output outputs/adhesive_fine
+python -m softgriplab animate-adhesive-robot --source outputs/adhesive_fast
 ```
 
-Set `JAX_PLATFORMS=cpu` to explicitly select CPU. Windows may need MSVC to build
-PyBullet. Replay requires only the ordinary package plus `[robot]`:
+Set `JAX_PLATFORMS=cpu` for CPU execution. Replay needs PyBullet, without JAX.
+The renderer checks the replayed head against the contact center to within one
+micrometre. Extra solved frames near withdrawal provide slow-motion
+detail without image text. Model settings and forces remain in JSON/CSV, keeping the animation concise.
 
-```bash
-python -m softgriplab animate-adhesive-robot --source docs/results/adhesive_robot/nominal
-```
-
-Committed trajectories contain the exact outer material coordinates used for
-rendering. Full particle histories stay in solver output. The archive retains
-the control, CSVs, source hashes and coupling-step comparison.
-`tools/collect_adhesive_robot.py` checks the records before updating public data.
+The [earlier switch-off example](ADHESIVE_ROBOT_SWITCH.md) and its archived checks
+describe a different release mechanism; they are not evidence for inertial pull-off.

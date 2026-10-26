@@ -1,0 +1,16 @@
+{
+  "source_trajectory_sha256": [
+    "b83d160e2ef24ef2c119e7470d6735401e2322200fb5c56ccc62c1ec3a138e5e",
+    "1ca17718770402e5c18d1deb1134492522246e42e5fb0ce0ab9894589b023b86"
+  ],
+  "deformation_scale": 1.0,
+  "frames": 101,
+  "renderer": "PyBullet TinyRenderer, depth buffer",
+  "geometry": "saved outer material sampling layers; no shape interpolation",
+  "force_trace_sha256": [
+    "7e0c430f96656e247fe8a81dd2efd4437354d2ea03023b48ec380d54772a6e1c",
+    "d0dcb2054b8371ce7da46f46c7ec3de7631820f1a94cf3169ebe50ccea668964"
+  ],
+  "force_component": "sphere_reaction_n",
+  "text_overlays": false
+}

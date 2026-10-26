@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "softgriplab"
-version = "0.5.0"
-description = "Material identification, compliant grasp screening, and shock benchmarks"
+version = "0.6.0"
+description = "Contact and material mechanics for robotic grasping, adhesion, and cutting"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-only"
@@ -15,6 +15,7 @@ dependencies = ["numpy>=1.26", "scipy>=1.11", "matplotlib>=3.8", "pillow>=10"]
 [project.optional-dependencies]
 test = ["pytest>=8"]
 robot = ["pybullet==3.2.7"]
+cutting = ["pybullet==3.2.7", "pyopencl>=2024.1", "scikit-image>=0.22"]
 mpm = ["jax-mpm @ git+https://github.com/lililii124/jax-mpm.git@fd8ed2caa40a50d01992420660f68ae6ce0d084f"]
 
 [project.urls]

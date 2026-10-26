@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 from .animations import font, save_frames
+from .force_inset import force_inset
 
 BG = "#f5f4f0"
 INK = "#292a28"
@@ -101,20 +102,13 @@ def render_fem(source):
                 [0, 0, 0.035 if grasp else 0.023],
                 0.26 if grasp else 0.23,
                 650,
-                510,
+                560,
                 yaw=38,
                 pitch=-17,
             )
             image = Image.new("RGB", (960, 560), BG)
-            image.paste(camera, (0, 45))
+            image.paste(camera, (0, 0))
             draw = ImageDraw.Draw(image)
-            title = (
-                "Grip · Lift · Release"
-                if grasp
-                else "Compression"
-            )
-            draw.text((23, 12), title, font=font(24), fill=INK)
-            draw.text((685, 12), "Section", font=font(18), fill=INK)
 
             def project(point):
                 return (805 + point[0] * 3300, 450 - point[2] * 3300)
@@ -166,6 +160,14 @@ def render_adhesion_pair(source, comparison, output):
             data.append({k: d[k].copy() for k in d.files})
     if not np.allclose(data[0]["time_s"], data[1]["time_s"]):
         raise ValueError("adhesion pair requires equal frame times")
+    traces = [
+        np.genfromtxt(folder / "observables.csv", delimiter=",", names=True)
+        for folder in folders
+    ]
+    limits = (
+        min(0.0, *(trace["sphere_reaction_n"].min() for trace in traces)),
+        max(0.0, *(trace["sphere_reaction_n"].max() for trace in traces)),
+    )
     cid = p.connect(p.DIRECT)
     frames = []
     try:
@@ -197,11 +199,17 @@ def render_adhesion_pair(source, comparison, output):
                     physicsClientId=cid,
                 )
                 picture = _camera(
-                    p, cid, [0.05, 0.05, 0.040], 0.22, 480, 510, yaw=35, pitch=-10
+                    p, cid, [0.05, 0.05, 0.040], 0.22, 480, 560, yaw=35, pitch=-10
                 )
-                frame.paste(picture, (480 * panel, 45))
-                caption = "Without adhesion" if panel == 0 else "With adhesion"
-                draw.text((24 + 480 * panel, 12), caption, font=font(19), fill=INK)
+                frame.paste(picture, (480 * panel, 0))
+                force_inset(
+                    frame,
+                    traces[panel]["time_s"],
+                    traces[panel]["sphere_reaction_n"],
+                    t,
+                    (20 + 480 * panel, 425, 260 + 480 * panel, 545),
+                    limits=limits,
+                )
                 p.removeBody(body, physicsClientId=cid)
             frames.append(frame)
     finally:
@@ -214,6 +222,14 @@ def render_adhesion_pair(source, comparison, output):
                     hashlib.sha256((folder / "trajectory.npz").read_bytes()).hexdigest()
                     for folder in folders
                 ],
+                "force_trace_sha256": [
+                    hashlib.sha256(
+                        (folder / "observables.csv").read_bytes()
+                    ).hexdigest()
+                    for folder in folders
+                ],
+                "force_component": "sphere_reaction_n",
+                "text_overlays": False,
                 "deformation_scale": 1.0,
                 "frames": len(frames),
                 "renderer": "PyBullet TinyRenderer, depth buffer",

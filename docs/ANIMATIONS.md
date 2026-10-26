@@ -1,6 +1,6 @@
 # Reproduce the simulation gallery
 
-All four primary animations use solver geometry. Surface rendering runs after
+The gallery uses solved material geometry and measured robot states. Surface rendering runs after
 FEM/MPM simulation, reads saved node coordinates, and uses a depth buffer. It
 never rescales deformation or prescribes a specimen shape. The robot camera
 captures the actual PyBullet state, with a simultaneous finger close-up.
@@ -11,6 +11,8 @@ captures the actual PyBullet state, with a simultaneous finger close-up.
 | Adhesion | JAX-MPM + upstream Dugdale surface traction | Advected particle surface and sphere position |
 | Soft grasp | Bullet FEM; finite jaws, friction and gravity | Actual nodes and fixture positions; no anchors |
 | Panda | PyBullet articulated rigid dynamics; finger collision and friction | Joint states, payload pose and measured contacts |
+| Adhesive transport | Panda + JAX-MPM; dry adhesion | Material surface and measured head motion |
+| Continuous cutting | Panda + PeriPy; moving blade and dynamic bonds | Material points, connectivity and measured knife pose |
 
 ## Generate the gallery
 
@@ -73,8 +75,8 @@ retained for compatibility, but it no longer draws synthetic uniform strain.
 `animate-adhesion` renders the two saved continuum trajectories without importing
 JAX. The robot uses PyBullet's existing Panda meshes and CPU camera.
 
-Frame times and parameters are stored in the CSV/JSON files. Animations retain
-only short labels: 3 s of FEM motion plays over about 4.5 s;
+Frame times and parameters are stored in the CSV/JSON files. Animations have no text overlays. Force insets replay the recorded axial
+contact reaction; scales remain fixed throughout each clip. Timing: 3 s of FEM motion plays over about 4.5 s;
 0.13 s of MPM pull-off plays over about 5 s to expose the contact sequence.
 Robot playback is approximately real time. Robot trace timestamps describe the
 state after each integration step. Grey tools and muted rubber colors identify
@@ -110,10 +112,10 @@ Upstream implementations: [Bullet FEM example](https://github.com/bulletphysics/
 
 ## Sequential robot cutting
 
-The sixth animation replays the solved FEM and cut-face geometry from three
-Panda knife strokes. [Setup, model and controls](CUTTING.md). To replay the
-committed data with PyBullet only:
+The sixth animation reconstructs solved PeriPy material points after three
+Panda knife strokes, with no initial cut interfaces. [Setup, model and controls](CUTTING.md). To replay the
+committed data with PyBullet and scikit-image:
 
 ```bash
-python -m softgriplab animate-cutting --source docs/results/cutting/nominal
+python -m softgriplab animate-cutting --source docs/results/dynamic_cutting/nominal
 ```

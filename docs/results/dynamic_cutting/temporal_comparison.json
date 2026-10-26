@@ -1,0 +1,47 @@
+{
+  "fine": {
+    "material_points": 5016,
+    "initial_major_components": 1,
+    "final_major_components": 4,
+    "peak_axial_contact_force_n": 0.6493994279905922,
+    "absolute_axial_contact_impulse_n_s": 0.1270151590710139,
+    "final_major_sizes": [
+      1712,
+      1673,
+      796,
+      790
+    ],
+    "debris_mass_fraction": 0.008971291866028708,
+    "component_transition_times_s": {
+      "1": 0.0,
+      "2": 0.8,
+      "3": 2.2,
+      "4": 3.6
+    },
+    "trajectory_sha256": "dec8f1aa51fbb8525e31c34fb61f2649a253badc49dd232afc0ceeb7329435c2"
+  },
+  "coarse": {
+    "material_points": 5016,
+    "initial_major_components": 1,
+    "final_major_components": 4,
+    "peak_axial_contact_force_n": 0.49449030621160217,
+    "absolute_axial_contact_impulse_n_s": 0.07004902351688491,
+    "final_major_sizes": [
+      1712,
+      1702,
+      796,
+      791
+    ],
+    "debris_mass_fraction": 0.0029904306220095694,
+    "component_transition_times_s": {
+      "1": 0.0,
+      "2": 0.8,
+      "3": 2.2,
+      "4": 3.6
+    },
+    "trajectory_sha256": "8be00131d46d7861e8a591a72e21f567dce678351019f374c01ea35335f0f70e"
+  },
+  "fine_dt_s": 4.99001996007984e-05,
+  "coarse_dt_s": 9.92063492063492e-05,
+  "note": "Temporal sensitivity at fixed material discretization; not spatial convergence."
+}

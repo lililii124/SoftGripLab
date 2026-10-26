@@ -1,0 +1,47 @@
+{
+  "backend": "PeriPy OpenCL + PyBullet Panda",
+  "peripy_commit": "04cae072e22568e29b9ab8f84d821f9576ecb728",
+  "opencl_device": "13th Gen Intel(R) Core(TM) i5-13400",
+  "particles": 5016,
+  "spacing_m": 0.0025,
+  "horizon_m": 0.006274999999999999,
+  "young_pa": 50000.0,
+  "poisson": 0.25,
+  "density_kg_m3": 1000.0,
+  "mass_kg": 0.07837500000000003,
+  "dt_s": 4.99001996007984e-05,
+  "coupling_dt_s": 0.008333333333333333,
+  "duration_s": 0.65,
+  "settling_duration_s": 0.4,
+  "critical_stretch": 1000000.0,
+  "geometric_knife_cutting": false,
+  "preset_interfaces": 0,
+  "initial_broken_bonds": 0,
+  "initial_connected_components": 1,
+  "final_connected_components": 1,
+  "final_component_sizes": [
+    5016
+  ],
+  "final_major_components": 1,
+  "numerical_debris_mass_fraction": 0.0,
+  "maximum_particle_speed_m_s": 2.0413092917093985,
+  "max_floor_penetration_m": 0.000466483790249112,
+  "max_knife_penetration_m": 0.00015905683821160785,
+  "reaction_force_and_torque_feedback": true,
+  "clamped_nodes": 0,
+  "success": false,
+  "backend_source_sha256": {
+    "peripy/cl/peridynamics.cl": "b08f8f74a502a66bff35077d7eab0e243dc64cbe49b96b945f61b7e01f657914",
+    "peripy/cl/euler_cromer.cl": "73bed7b723dec79375667506f67c9106bc47fb174310070630b172956093aca8"
+  },
+  "limitations": [
+    "Geometric severing of bonds intersected by the measured finite blade; not a calibrated fracture-energy model.",
+    "Bond-based microelastic bulk with tensile critical-stretch failure; fixed Poisson ratio 0.25.",
+    "Homogeneous uncalibrated fruit surrogate without peel or fibres.",
+    "Penalty floor/blade/fragment contact; fragment neighbour search once per coupling step.",
+    "First-order partitioned robot coupling; robot links outside the blade do not contact material."
+  ],
+  "cut_positions_m": [
+    0.045
+  ]
+}

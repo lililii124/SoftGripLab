@@ -147,11 +147,22 @@ The software stack uses Bullet's existing FEM and articulated-body solvers,
 JAX-MPM's existing continuum/contact code, and the upstream Panda asset. No
 experimental material calibration or real-robot validation is claimed.
 
-## Sequential cutting archive
+## Legacy sequential cutting archive
 
-[The cutting validation](CUTTING.md#evidence-and-limits) records a complete
+[The archived DiSECt validation](CUTTING_DISECT.md#evidence-and-limits) records a complete
 three-cut rollout, a 0.5 s no-damage contact prefix and a 1.1 s half-step first-cut
 check. Tests independently reconstruct material connectivity, verify irreversible
 spring failure, positive element determinants, reference mass, fixed nodes and
 rendering provenance. These are numerical consistency checks, not experimental
 validation or spatial convergence evidence.
+
+## Dynamic cutting without initial interfaces
+
+[The current cutting checks](CUTTING.md#archived-validation) use the saved
+PeriPy material graph. Tests independently check intact initial connectivity,
+support contact, irreversible bond removal, retained mass and four major final
+pieces. A shifted stroke uses the identical initial graph and produces a different
+cut. Disabling both severing and stretch failure preserves a contacted intact body.
+Both tested time steps complete the three cuts, but fragment mass and contact
+impulse remain sensitive to the time step; no converged force prediction is claimed.
+Render hashes tie the animation and its force inset to the saved observations.

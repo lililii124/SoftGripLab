@@ -1,133 +1,101 @@
-# Panda sequential cutting
+# Robot cutting without predefined interfaces
 
-![Three cuts through the solved fruit mesh](assets/06_banana_cutting.gif)
+The initial fruit surrogate is one connected body with no cut faces, duplicated
+nodes or weakened planes. The Panda moves a finite wedge-shaped knife through
+it. Blade contact and bond severing use the measured robot pose during integration.
+The tool path can change without rebuilding the initial material connectivity.
 
-The Panda makes three strokes through a curved, homogeneous peeled-fruit
-surrogate. The saved FEM surface deforms under knife contact, each cohesive
-interface loses stiffness, and the material connectivity changes from one
-component to four. The end band stays clamped. Separated pieces retain their
-positions and velocities; the adapter never resets or moves them into place.
+## Reused mechanics
 
-## Reused solver and license
+[PeriPy](https://github.com/alan-turing-institute/PeriPy), revision
+`04cae072e22568e29b9ab8f84d821f9576ecb728`, supplies the unmodified OpenCL
+`bond_force1` and Euler–Cromer kernels. They integrate microelastic bond forces,
+tensile critical-stretch failure, gravity and externally supplied contact loads.
+PeriPy is MIT licensed. SoftGripLab adds the moving-tool adapter.
 
-The optional backend is [NVIDIA DiSECt](https://github.com/NVlabs/DiSECt), commit
-`ff90165070335bb8033000373d2d20c6aac13edd`, described in the
-[DiSECt project](https://diff-cutting-sim.github.io/). It supplies the FEM,
-knife contact, virtual-node cut topology and damage kernels. PyBullet supplies
-Panda dynamics and rendering. SoftGripLab supplies the specimen, robot adapter,
-cut-volume integration, checks and replay workflow.
+During each substep, a material bond segment is tested against the current finite
+blade mid-surface, bounded by the moving blade mesh. Only bonds crossing
+from one blade side to the other are removed. The front uses the same h × 0.45
+material-point contact radius as repulsion; it is not a preinserted interface. The initial bond list
+has no knowledge of the tool path. This is geometric cutting with solved bulk
+dynamics; it does not predict cutting force from calibrated fracture toughness.
 
-**DiSECt has a separate NVIDIA research/evaluation license.** It is not covered
-by SoftGripLab's GPL and is not a permissively licensed dependency. Its source
-and binaries are not bundled in this repository. Read its
-[license](https://github.com/NVlabs/DiSECt/blob/main/LICENSE.md) before reuse.
-The default installation and archived-mesh replay do not import DiSECt.
-
-## Reproduce
-
-Use a dedicated **Python 3.11** environment, a C++ compiler and CPU PyTorch.
-This setup was exercised on Windows with Visual Studio 2022 C++ tools and
-PyTorch 2.13 CPU. The script includes Linux compiler flags; Linux compilation
-has not been exercised here. JAX-MPM scenes use a separate Python 3.12+ environment.
-
-```bash
-python -m pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -r requirements-cutting.txt
-python -m pip install '.[robot,test]'
-python tools/setup_disect.py --destination ../disect-cpu
-python -m softgriplab banana-cutting --backend ../disect-cpu --output outputs/banana_robot
-```
-
-Setup clones the pinned revision into a new external directory. It adapts
-Python AST/import APIs, loads URDF/GUI support only if needed, locates the
-Windows compiler and compiles the CPU kernels and C++ mesh cutter. It does
-not edit the numerical kernels. `softgriplab_setup.json` records patch hashes.
-An existing destination is never overwritten; `--resume-build` retries a
-failed compilation after verifying those hashes. On Windows, an unusual
-compiler location can be supplied with `SOFTGRIPLAB_VCVARS`.
-
-Replay the committed result with only the normal robot dependencies:
-
-```bash
-python -m softgriplab animate-cutting --source docs/results/cutting/nominal
-```
-
-The renderer uses saved hard-node coordinates and interpolated virtual boundary
-coordinates, with deformation scale 1. Recorded Panda joints reproduce the
-knife contact mesh's center to within 1 micrometre. The mounting stem and end
-fixture are visual markers; blade contact and the prescribed end constraint
-are the physical model.
-
-## Model
+The robot receives the interval-averaged material force and torque. Its measured
+position and orientation drive contact. The visible knife uses the same mesh and
+transform as the contact calculation.
 
 | Quantity | Value |
 | --- | --- |
-| Reference length / maximum diameter | 160 / 28 mm |
-| Density / Young's modulus / Poisson ratio | 1,000 kg/m³ / 50 kPa / 0.30 |
-| Reference mass | 76.570459 g |
-| Virtual tetrahedra / cohesive springs | 2,592 / 243 |
-| Planned planes in local x | 50, 3.3333, −43.3333 mm |
-| Cohesive stiffness / damping | 500 N/m / 0.003 N·s/m |
-| Knife contact penalty / friction | 1,000 N/m / 0.5 |
-| Ground contact penalty / friction | 10,000 N/m / 0.6 |
-| End constraint | Reference x < −72 mm; 50 fixed nodes |
-| Robot coupling step | 1/120 s |
-| Material step | 19.9840 µs; 417 substeps per coupling step |
-| Duration | 4.2 s |
+| Geometry | Curved 160 mm body; homogeneous surrogate; no peel or fibres |
+| Material-point spacing | 2.5 mm |
+| Nonlocal horizon | 2.51 times the spacing |
+| Bulk | E = 50 kPa; density 1,000 kg/m³; bond-based nu = 0.25 |
+| Tensile failure | Critical stretch 0.5, additional to blade-intersection cutting |
+| Initial condition | 0.4 s of solved gravity settling before the first displayed frame |
+| Support | Finite board; friction coefficient 0.65; floor below the board |
+| Constraints | No anchors or clamped end |
 
-The robot's measured knife poses drive each interval's FEM substeps. The
-opposite mean knife force loads the robot during the following interval.
-This is first-order partitioned, force-only coupling: no contact torque is
-returned. The blade is the same mesh in contact and rendering.
+Separated material retains position, velocity and mass. Short-range penalty
+contact acts between disconnected material samples. Its neighbour search updates
+once per coupling interval. Isolated numerical debris remains in the archive and
+mass accounting; major pieces and debris mass are reported separately. Neither
+debris nor cutting force is a calibrated prediction for real banana tissue.
 
-The three interfaces are inserted before the run, but start connected by
-springs. The upstream law reduces spring stiffness only when knife contact
-and positive spring opening coexist. Its per-step softening coefficient is
-scaled by the material time step, using a rate of 2.5e7 N/(m²·s). This is an
-illustrative opening-dependent damage law, not a calibrated fracture energy.
+## Rendering and records
 
-Preparing the virtual topology naively duplicates integration volumes: raw
-lumped mass would increase from 76.57 to 98.22 g. `cut_quadrature.py` clips each
-crossing reference tetrahedron at its cut plane, integrates its linear shape
-functions over its own physical portion, and scales element coefficients by
-that volume fraction. The corrected mass is 76.57 g. Analytical clipped-tet
-tests check both volume and first moments. All cuts in this scene are separated
-enough that no element crosses two planes; the adapter rejects that case.
+scikit-image marching cubes reconstructs the surface from saved particle positions.
+Particle volume is deposited on voxels of spacing h/3, smoothed with a Gaussian
+of width 0.75 h, and contoured at density 0.4 for each solved connected component.
+The reconstruction has no input describing the knife path or expected cuts.
+Sparse fragments below the density isovalue are shown as material samples with
+their contact radius; no connected component is omitted from rendering.
+Deformation scale is 1:1. This stated surface reconstruction does not refine the
+mechanical discretization.
 
-## Evidence and limits
+Robot joints, tool transforms, all material points, initial/final bonds, component
+labels and particle volumes are saved in `trajectory.npz`. JSON/CSV records retain
+parameters and observations; the animation has no text overlays. A synchronized inset shows the recorded
+vertical reaction on the knife. It is a contact reaction, not a fracture-energy
+calibrated cutting-force prediction.
 
-The [archived data](results/cutting) contains the full nominal node history,
-topology, spring stiffness, measured robot joints, contact forces, settings,
-backend source hashes and rendering provenance.
-
-| Check | Recorded result |
-| --- | --- |
-| Complete nominal sequence | Cuts finish at 0.7417, 2.1250 and 3.5667 s |
-| Material graph | 1 → 2 → 3 → 4 connected components; recomputed independently in tests |
-| Reference mass preservation | Relative tolerance 1e-10 |
-| Smallest determinant of deformation gradient | 0.3858, sampled every coupling interval |
-| Ground penetration at saved physical surface nodes | At most 0.0519 mm |
-| Zero-damage contact prefix, first 0.5 s | Nonzero knife reaction; all springs remain intact |
-| Half material step, first 1.1 s | First cut completes at 0.7500 s, one robot interval later |
-| Fresh backend clone/build and public CLI, first 1.1 s | All 13 observable columns match the nominal prefix exactly on this machine |
-
-The two shorter controls cover their stated prefixes, not the full three-cut
-sequence. The half-step comparison is a sensitivity check, not convergence
-proof. The maximum tool tracking error is 9.92 mm during motion; contact always
-uses the measured pose. Ground penetration over all mathematical support nodes
-is reported separately because ghost nodes can lie outside the physical domain.
-
-This is an **uncalibrated fruit surrogate with planned fracture planes**. It has
-no peel, fibres, viscoelasticity or automatic crack-path discovery. The upstream
-paired-interface contact is retained, but general collision between arbitrarily
-rotated fragments is absent. There is no material/robot-arm collision. Spatial
-convergence, measured cutting forces and real-robot validation remain open.
-
-To regenerate the comparison records and archive:
+## Setup and reproduction
 
 ```bash
-python -m softgriplab banana-cutting --backend ../disect-cpu --duration .5 --softening-rate 0 --no-render --output outputs/banana_control
-python -m softgriplab banana-cutting --backend ../disect-cpu --duration 1.1 --dt .00001 --no-render --output outputs/banana_fine
-python tools/collect_cutting.py
-python -m pytest -q tests/test_cut_quadrature.py tests/test_cutting_archive.py
+python -m pip install '.[cutting]'
+python tools/setup_peripy.py ../peripy-backend
+python -m softgriplab banana-cutting --backend ../peripy-backend --output outputs/banana_robot
+python -m softgriplab animate-cutting --source outputs/banana_robot
+```
+
+The solver needs a double-precision OpenCL CPU or GPU device and its runtime.
+Only PeriPy source kernels are loaded; its Python/Cython and HDF5 dependencies
+are not required. Replay needs PyBullet and scikit-image, without OpenCL.
+
+A changed path uses identical initial connectivity. An intact-body control
+disables blade severing and suppresses stretch failure:
+
+```bash
+python -m softgriplab banana-cutting --backend ../peripy-backend --cut-x .035 --duration 1.4 --output outputs/pd_shifted
+python -m softgriplab banana-cutting --backend ../peripy-backend --cut-x .045 --no-knife-severing --critical-stretch 1000000 --duration .65 --output outputs/pd_intact
+```
+
+The prior DiSECt experiment is a [separate legacy example](CUTTING_DISECT.md),
+run with `banana-cutting-disect` under its NVIDIA research license. The current
+PeriPy scene does not import DiSECt or use its knife geometry.
+
+## Archived validation
+
+The [saved runs](results/dynamic_cutting/) include the complete three-stroke case,
+a shifted first stroke using the identical initial graph, and a contacted intact
+control with both severing and stretch failure disabled. Both tested time steps
+produce four major pieces. Small numerical fragments remain: about 0.30% of mass
+at the coarser step and 0.90% at the finer step. All material samples are retained
+and rendered. This sensitivity prevents a claim of converged fragmentation or
+cutting force; the F–t inset is the recorded contact reaction of this model.
+
+```bash
+python -m softgriplab banana-cutting --backend ../peripy-backend --output outputs/pd_nominal
+python -m softgriplab banana-cutting --backend ../peripy-backend --dt .0001 --no-render --output outputs/pd_ductile
+# Also run the shifted and intact controls above.
+python tools/collect_dynamic_cutting.py
 ```

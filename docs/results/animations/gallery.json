@@ -5,17 +5,17 @@
       960,
       560
     ],
-    "sha256": "8927116f8a78e90373fe8462e1954d3dc451961a1a4a012d541cdc7eaef617cc",
-    "bytes": 1911145
+    "sha256": "e00c3b12ad217d9220bb1b3bc16cf29344d59c232a6a8fa1dbb9eaaa2e8ed241",
+    "bytes": 1918603
   },
   "02_adhesion": {
-    "frames": 95,
+    "frames": 101,
     "pixels": [
       960,
       560
     ],
-    "sha256": "b1aaae758f8906b53df11156f5fb1d58e42094489a8a8c184f3a210db8a8a0ee",
-    "bytes": 3001852
+    "sha256": "2277fcf9eec70dbd1f822d01bd647446a87fa5917b9ba6201cb170fed4ea2eec",
+    "bytes": 3306019
   },
   "03_grasp": {
     "frames": 91,
@@ -23,16 +23,16 @@
       960,
       560
     ],
-    "sha256": "6360dec92459789a540afda1c4ab5dcd33f89354a032cb45f55774415bc9af7c",
-    "bytes": 2248624
+    "sha256": "456406ed56d360f677ba65efffc0e9abc2ceb4c97f395396b3331e772d781d2f",
+    "bytes": 2249143
   },
   "04_robot": {
-    "frames": 136,
+    "frames": 135,
     "pixels": [
       960,
-      480
+      430
     ],
-    "sha256": "5598cd6e23b3d2ce83954ac094186b3d06a7f795716e27271ef422e4f5f96d9b",
-    "bytes": 2919829
+    "sha256": "ea9f18cdfcb8bb5b098e1fa106a40502191ff8d67cae9dcfb68f92926f0f7d73",
+    "bytes": 2680171
   }
 }

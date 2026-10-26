@@ -12,13 +12,12 @@ import os
 from pathlib import Path
 import sys
 import subprocess
-import xml.etree.ElementTree as ET
 
 import numpy as np
 
 from ..cut_quadrature import apply_cut_volume_weights
 from ..meshes import tetrahedral_block, write_mesh
-from .adhesive_robot import _tool_urdf
+from .robot_tools import knife_robot_urdf
 
 DISECT_COMMIT = "ff90165070335bb8033000373d2d20c6aac13edd"
 CUT_PLANES = np.array([0.05, 1 / 300, -13 / 300])
@@ -54,57 +53,6 @@ def knife_target(t):
     u = np.clip((t - times[i]) / (times[i + 1] - times[i]), 0.0, 1.0)
     s = 10 * u**3 - 15 * u**4 + 6 * u**5
     return np.asarray(points[i]) + s * (np.asarray(points[i + 1]) - points[i])
-
-
-def knife_robot_urdf(asset_folder, output, vertices, faces):
-    """Panda with the same knife mesh that DiSECt uses for contact."""
-    import pybullet as p
-
-    output = Path(output)
-    mesh = output / "knife.obj"
-    mesh.write_text(
-        "".join("v %.12g %.12g %.12g\n" % tuple(v) for v in vertices)
-        + "".join(
-            "f %d %d %d\n" % tuple(f + 1) for f in np.asarray(faces).reshape(-1, 3)
-        ),
-        encoding="ascii",
-    )
-    tree = ET.parse(_tool_urdf(asset_folder, output, 0.018))
-    target = tree.getroot().find("link[@name='panda_grasptarget']")
-    for visual in list(target.findall("visual")):
-        target.remove(visual)
-    # Desired knife rotation maps DiSECt x/y/z to world y/z/x.
-    _, mount_q = p.multiplyTransforms(
-        [0, 0, 0], [1, 0, 0, 0], [0, 0, 0], [0.5, 0.5, 0.5, 0.5]
-    )
-    visual = ET.SubElement(target, "visual")
-    ET.SubElement(
-        visual,
-        "origin",
-        xyz="0 0 .03",
-        rpy=" ".join(map(str, p.getEulerFromQuaternion(mount_q))),
-    )
-    ET.SubElement(
-        ET.SubElement(visual, "geometry"), "mesh", filename=str(mesh.resolve())
-    )
-    material = ET.SubElement(visual, "material", name="knife_steel")
-    ET.SubElement(material, "color", rgba=".64 .66 .64 1")
-    # Fixed mounting stem connects the hand to the knife spine. Visual only;
-    # the contact geometry remains exactly the upstream blade mesh.
-    stem = ET.SubElement(target, "visual")
-    ET.SubElement(stem, "origin", xyz="0 0 -.015", rpy="0 0 0")
-    ET.SubElement(
-        ET.SubElement(stem, "geometry"), "cylinder", radius=".006", length=".052"
-    )
-    ET.SubElement(
-        ET.SubElement(stem, "material", name="knife_mount"),
-        "color",
-        rgba=".44 .46 .44 1",
-    )
-    target.find("inertial/origin").set("xyz", "0 0 .03")
-    path = output / "panda_cutting.urdf"
-    tree.write(path, encoding="utf-8", xml_declaration=True)
-    return path, mount_q
 
 
 def run_banana_cutting(

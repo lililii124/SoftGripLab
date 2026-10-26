@@ -7,6 +7,14 @@ This project uses external tools without vendoring their implementations:
 - Matplotlib: https://matplotlib.org/ (Matplotlib license)
 - pytest: https://pytest.org/ (MIT)
 - JAX: https://github.com/jax-ml/jax (Apache-2.0)
+- scikit-image: https://scikit-image.org/ (BSD-3-Clause), particle-surface reconstruction.
+- PyOpenCL: https://github.com/inducer/pyopencl (MIT), access to the OpenCL runtime.
+- PeriPy: https://github.com/alan-turing-institute/PeriPy (MIT)
+  Copyright (c) 2020 Tim Dodwell.
+  Optional source reference: 04cae072e22568e29b9ab8f84d821f9576ecb728.
+  The unmodified peridynamics.cl and euler_cromer.cl kernels supply material
+  forces, tensile bond failure and dynamics. The external checkout preserves
+  its MIT license. SoftGripLab adds the moving-blade contact/cutting adapter.
 - PyBullet / Bullet: https://github.com/bulletphysics/bullet3 (zlib)
 - Smooth sphere mesh supplied by pybullet_data/sphere_smooth.obj (Bullet zlib distribution).
 - Panda robot asset supplied by pybullet_data/franka_panda (Apache-2.0).

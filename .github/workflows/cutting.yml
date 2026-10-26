@@ -1,0 +1,14 @@
+name: Dynamic cutting checks
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  cutting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y pocl-opencl-icd
+      - run: python -m pip install '.[cutting,test]'
+      - run: python -m pytest -q tests/test_dynamic_cutting.py tests/test_dynamic_cutting_archive.py

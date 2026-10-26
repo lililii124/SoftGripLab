@@ -127,7 +127,8 @@ top material layer. Its interval-averaged reaction loads the next robot step.
 Gravity acts throughout; switching adhesion off after landing releases the
 object. A compression-contact gate prevents engagement before pressing.
 Parameters, controls, time-step comparison and limitations are recorded in
-[the coupled scene description](ADHESIVE_ROBOT.md).
+[the published switch-release scene](ADHESIVE_ROBOT_SWITCH.md).
+The acceleration-driven release adapter is experimental; see [its checks](ADHESIVE_ROBOT.md).
 
 ## References
 
@@ -136,11 +137,14 @@ Parameters, controls, time-step comparison and limitations are recorded in
 - [Constitutive equations for finite-rate SLS loading, Polymers 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9143375/)
 - [JAX-MPM documentation](https://github.com/lililii124/jax-mpm/blob/main/docs/EXAMPLES.md)
 
-## Sequential cutting (optional research backend)
+## Sequential cutting
 
-[Scene 6](CUTTING.md) uses DiSECt virtual-node FEM with preinserted cohesive
-planes, opening-dependent knife-contact damage and mass-preserving cut-volume
-integration. Measured Panda knife poses drive the solver; mean material reaction
-returns to the arm. Three strokes produce four material components. Parameters
-are illustrative, the end is clamped, and general fragment collision is absent.
-DiSECt retains its separate NVIDIA research/evaluation license.
+[Scene 6](CUTTING.md) uses unmodified PeriPy microelastic force and integration
+kernels with a moving finite-blade adapter. The initial material is intact and
+settles onto the board under gravity. Bonds crossing the measured blade surface
+are removed during integration; no cut surfaces are inserted before the run.
+The robot receives the material reaction force and torque. The renderer reads
+solved particles and reconstructs each connected component without the knife path.
+The fruit surrogate is homogeneous and uncalibrated; the geometric cutting rule
+does not predict fracture-energy-dependent cutting forces. The previous planned
+DiSECt example remains [archived](CUTTING_DISECT.md).

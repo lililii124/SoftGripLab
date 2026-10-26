@@ -1,0 +1,16 @@
+{
+  "trajectory_sha256": "dec8f1aa51fbb8525e31c34fb61f2649a253badc49dd232afc0ceeb7329435c2",
+  "force_trace_sha256": "a6289bd09cf7b50a9f9630321eccd25c622078005e78819bd1c45024233b624b",
+  "force_component": "reaction_z_n",
+  "text_overlays": false,
+  "frames": 85,
+  "deformation_scale": 1,
+  "max_replayed_tool_center_error_m": 0.0,
+  "geometry": "Marching cubes of particle density, separately per solved connected component",
+  "voxel_spacing_m": 0.0008333333333333334,
+  "gaussian_sigma_m": 0.001875,
+  "density_isovalue": 0.4,
+  "geometry_uses_knife_path": false,
+  "sparse_fragments": "contact-radius spheres; no components discarded",
+  "renderer": "PyBullet TinyRenderer"
+}

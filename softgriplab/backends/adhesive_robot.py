@@ -63,7 +63,13 @@ def _tool_urdf(asset_folder, output, radius):
     return path
 
 
-def _target(time_s):
+def _target(time_s, release_mode="switch", release_duration_s=0.12):
+    if release_mode == "inertial" and time_s >= 4.0:
+        u = np.clip((time_s - 4.4) / release_duration_s, 0.0, 1.0)
+        # Constant upward acceleration for half the stroke, then braking.
+        # The measured robot motion, rather than this command, drives contact.
+        s = 2 * u**2 if u <= 0.5 else 1 - 2 * (1 - u) ** 2
+        return np.array([0.06, 0.13, 0.127 + 0.04 * s])
     times = np.array([0.0, 0.4, 1.2, 1.7, 2.7, 4.0, 4.8, 5.3, 5.8, 6.0])
     centers = np.array(
         [
@@ -97,7 +103,18 @@ def run_adhesive_robot(
     coupling_dt=1 / 120,
     dt_factor=1.0,
     young_pa=12000.0,
+    release_mode="switch",
+    release_duration_s=0.04,
+    release_position_gain=0.6,
 ):
+    if (
+        release_mode not in ("switch", "inertial")
+        or not 0.04 <= release_duration_s <= 1.4
+        or not 0 < release_position_gain <= 1
+    ):
+        raise ValueError(
+            "release mode must be switch/inertial and duration between .04 and 1.4 s"
+        )
     if (
         work_j_m2 < 0
         or not np.isfinite(work_j_m2)
@@ -197,7 +214,7 @@ def run_adhesive_robot(
         orientation = p.getQuaternionFromEuler([np.pi, 0, 0])
         for i, q in enumerate([0.0, -0.4, 0.0, -2.2, 0.0, 1.8, 0.8]):
             p.resetJointState(robot, i, q, physicsClientId=cid)
-        target = _target(0) + offset + [0, 0, 0.018]
+        target = _target(0, release_mode, release_duration_s) + offset + [0, 0, 0.018]
         ik = p.calculateInverseKinematics(
             robot,
             11,
@@ -225,6 +242,8 @@ def run_adhesive_robot(
             return np.asarray(world) - offset
 
         current = measured_center()
+        head_velocity = np.zeros(3)
+        head_acceleration = np.zeros(3)
         stride = max(1, round(1 / (fps * coupling_dt)))
         steps = round(6 / coupling_dt)
         established_contact = False
@@ -232,10 +251,17 @@ def run_adhesive_robot(
         for tick in range(steps + 1):
             t = tick * coupling_dt
             activation = float(
-                work_j_m2 > 0 and established_contact and 1.25 <= t < 5.05
+                work_j_m2 > 0
+                and established_contact
+                and t >= 1.25
+                and (release_mode == "inertial" or t < 5.05)
             )
             if tick:
-                target = _target(t) + offset + [0, 0, 0.018]
+                target = (
+                    _target(t, release_mode, release_duration_s)
+                    + offset
+                    + [0, 0, 0.018]
+                )
                 ik = p.calculateInverseKinematics(
                     robot,
                     11,
@@ -251,7 +277,19 @@ def run_adhesive_robot(
                     p.POSITION_CONTROL,
                     targetPositions=ik[:7],
                     forces=[120.0] * 7,
-                    positionGains=[1 - 0.82 ** (coupling_dt * 120)] * 7,
+                    positionGains=[
+                        1
+                        - (
+                            1
+                            - (
+                                release_position_gain
+                                if release_mode == "inertial" and t >= 4.4
+                                else 0.18
+                            )
+                        )
+                        ** (coupling_dt * 120)
+                    ]
+                    * 7,
                     velocityGains=[1.0] * 7,
                     physicsClientId=cid,
                 )
@@ -266,13 +304,28 @@ def run_adhesive_robot(
                 )
                 p.stepSimulation(physicsClientId=cid)
                 after = measured_center()
+                next_velocity = (after - current) / coupling_dt
+                head_acceleration = (next_velocity - head_velocity) / coupling_dt
+                head_velocity = next_velocity
                 state, reaction_j, penetration = advance(
                     state, jnp.asarray(current), jnp.asarray(after), activation
                 )
                 reaction = np.asarray(reaction_j)
                 max_penetration = max(max_penetration, float(penetration))
                 current = after
-                validate_state(state, cfg)
+                try:
+                    validate_state(state, cfg)
+                except (FloatingPointError, ValueError):
+                    np.savez_compressed(
+                        output / "failure_state.npz",
+                        time_s=t,
+                        position_m=np.asarray(state.x),
+                        velocity_m_s=np.asarray(state.v),
+                        deformation_gradient=np.asarray(state.F),
+                        sphere_center_m=current,
+                        mass_kg=np.asarray(state.mass),
+                    )
+                    raise
             x = np.asarray(state.x)
             com = np.average(x, axis=0, weights=np.asarray(state.mass))
             velocity = np.average(
@@ -295,13 +348,20 @@ def run_adhesive_robot(
                     activation * float(load.adhesive_points),
                     float(load.gap.min()),
                     float(np.linalg.det(np.asarray(state.F)).min()),
-                    float(np.linalg.norm(current - _target(t))),
+                    float(
+                        np.linalg.norm(
+                            current - _target(t, release_mode, release_duration_s)
+                        )
+                    ),
                     float(x[:, 2].min()),
                     float(x[:, 2].max()),
                     float(load.compressed_points),
+                    *current,
+                    *head_velocity,
+                    *head_acceleration,
                 ]
             )
-            if tick % stride == 0:
+            if tick % stride == 0 or (release_mode == "inertial" and 4.35 <= t <= 4.8):
                 positions.append(x.copy())
                 times.append(t)
                 centers.append(current.copy())
@@ -361,14 +421,35 @@ def run_adhesive_robot(
             rows,
             delimiter=",",
             comments="",
-            header="time_s,com_x_m,com_y_m,com_z_m,com_vx_m_s,com_vy_m_s,com_vz_m_s,reaction_x_n,reaction_y_n,reaction_z_n,adhesion_on,adhesive_points,min_gap_m,min_det_f,tool_tracking_error_m,bottom_z_m,top_z_m,compressed_points",
+            header="time_s,com_x_m,com_y_m,com_z_m,com_vx_m_s,com_vy_m_s,com_vz_m_s,reaction_x_n,reaction_y_n,reaction_z_n,adhesion_on,adhesive_points,min_gap_m,min_det_f,tool_tracking_error_m,bottom_z_m,top_z_m,compressed_points,head_x_m,head_y_m,head_z_m,head_vx_m_s,head_vy_m_s,head_vz_m_s,head_ax_m_s2,head_ay_m_s2,head_az_m_s2",
         )
         summary = {
             "backend": "partitioned PyBullet Panda + JAX-MPM",
+            "jax_version": jax.__version__,
+            "numpy_version": np.__version__,
+            "release_mode": release_mode,
+            "release_duration_s": release_duration_s,
+            "release_position_gain": release_position_gain,
+            "release_stroke_m": 0.04,
+            "release_detail_frames": release_mode == "inertial",
+            "release_start_s": 4.4 if release_mode == "inertial" else 5.05,
+            "commanded_upward_acceleration_m_s2": 4 * 0.04 / release_duration_s**2
+            if release_mode == "inertial"
+            else None,
+            "max_measured_upward_acceleration_m_s2": float(
+                rows[rows[:, 0] >= 4.4, 26].max()
+            ),
+            "detached_at_end": bool(
+                rows[-1, 11] == 0
+                and rows[-1, 17] == 0
+                and rows[-1, 12] > law.interaction_range
+            ),
+            "adhesion_switched_off_for_release": release_mode == "switch",
             "work_j_m2": work_j_m2,
             "young_pa": young_pa,
             "poisson": nu,
             "grid": grid,
+            "grid_domain_m": domain,
             "particles": len(reference),
             "mass_kg": total_mass,
             "weight_n": total_mass * 9.81,
@@ -399,7 +480,7 @@ def run_adhesive_robot(
                 for name in ("core.py", "adhesion.py", "boundaries.py")
             },
             "limitations": [
-                "Ideal switchable dry adhesion strength; no vacuum, electrostatic field or leakage model.",
+                "Finite-range dry adhesion; no vacuum, electrostatic field or leakage model.",
                 "Spherical head acts on the original top material sampling layer only.",
                 "One coupling interval reaction lag; grid-based floor contact has spatial error.",
                 "Robot meshes outside the adhesive head do not collide with MPM particles.",

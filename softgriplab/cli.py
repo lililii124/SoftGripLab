@@ -27,7 +27,7 @@ def main(argv=None):
         "mpm-grasp", help="Optional 3D JAX-MPM squeeze/hold/base-shock scene"
     )
     mpm.add_argument("--output", type=Path, default=Path("outputs/mpm"))
-    mpm.add_argument("--grid", type=int, default=24)
+    mpm.add_argument("--grid", type=int, default=32)
     mpm.add_argument("--frames", type=int, default=40)
     mpm.add_argument("--friction", type=float, default=0.6)
     mpm.add_argument(
@@ -106,6 +106,11 @@ def main(argv=None):
     coupled.add_argument("--output", type=Path, default=Path("outputs/adhesive_robot"))
     coupled.add_argument("--work", type=float, default=6.0)
     coupled.add_argument("--grid", type=int, default=32)
+    coupled.add_argument(
+        "--release-mode", choices=("inertial", "switch"), default="switch"
+    )
+    coupled.add_argument("--release-duration", type=float, default=0.04)
+    coupled.add_argument("--release-gain", type=float, default=0.6)
     coupled.add_argument("--dt-factor", type=float, default=1.0)
     coupled.add_argument("--coupling-dt", type=float, default=1 / 120)
     coupled.add_argument("--fps", type=int, default=15)
@@ -115,7 +120,7 @@ def main(argv=None):
     )
     replay.add_argument("--source", type=Path, default=Path("outputs/adhesive_robot"))
     cutting = commands.add_parser(
-        "banana-cutting",
+        "banana-cutting-disect",
         help="Three sequential FEM cuts with the optional DiSECt research backend",
     )
     cutting.add_argument("--output", type=Path, default=Path("outputs/banana_robot"))
@@ -126,8 +131,22 @@ def main(argv=None):
     cutting.add_argument("--softening-rate", type=float, default=2.5e7)
     cutting.add_argument("--fps", type=int, default=15)
     cutting.add_argument("--no-render", action="store_true")
+    pd = commands.add_parser(
+        "banana-cutting", help="PeriPy cutting with no prescribed interfaces"
+    )
+    pd.add_argument("--output", type=Path, default=Path("outputs/banana_robot"))
+    pd.add_argument("--backend", type=Path)
+    pd.add_argument("--spacing", type=float, default=0.0025)
+    pd.add_argument("--dt", type=float, default=5e-5)
+    pd.add_argument("--coupling-dt", type=float, default=1 / 120)
+    pd.add_argument("--duration", type=float, default=4.2)
+    pd.add_argument("--critical-stretch", type=float, default=0.5)
+    pd.add_argument("--no-knife-severing", action="store_true")
+    pd.add_argument("--cut-x", type=float, nargs="+", default=(0.045, 0.0, -0.045))
+    pd.add_argument("--fps", type=int, default=20)
+    pd.add_argument("--no-render", action="store_true")
     cut_replay = commands.add_parser(
-        "animate-cutting", help="Replay saved FEM cutting data; DiSECt is not required"
+        "animate-cutting", help="Replay saved cutting data without importing the solver"
     )
     cut_replay.add_argument("--source", type=Path, default=Path("outputs/banana_robot"))
     args = parser.parse_args(argv)
@@ -236,16 +255,25 @@ def main(argv=None):
                         coupling_dt=args.coupling_dt,
                         fps=args.fps,
                         render=not args.no_render,
+                        release_mode=args.release_mode,
+                        release_duration_s=args.release_duration,
+                        release_position_gain=args.release_gain,
                     ),
                     indent=2,
                 )
             )
         elif args.command == "animate-cutting":
-            from .advanced_render import render_banana_cutting
+            report = json.loads((args.source / "summary.json").read_text())
+            if "peripy_commit" in report:
+                from .cutting_render import render_cutting
 
-            render_banana_cutting(args.source)
+                render_cutting(args.source)
+            else:
+                from .advanced_render import render_banana_cutting
+
+                render_banana_cutting(args.source)
             print(args.source / "banana_cutting.gif")
-        elif args.command == "banana-cutting":
+        elif args.command == "banana-cutting-disect":
             from .backends.banana_cutting import run_banana_cutting
 
             print(
@@ -263,6 +291,26 @@ def main(argv=None):
                     indent=2,
                 )
             )
+        elif args.command == "banana-cutting":
+            from .backends.peridynamic_cutting import run_cutting
+
+            result = run_cutting(
+                args.output,
+                source=args.backend,
+                spacing=args.spacing,
+                dt=args.dt,
+                coupling_dt=args.coupling_dt,
+                duration_s=args.duration,
+                critical_stretch=args.critical_stretch,
+                knife_cutting=not args.no_knife_severing,
+                cut_positions=args.cut_x,
+                fps=args.fps,
+            )
+            if not args.no_render:
+                from .cutting_render import render_cutting
+
+                render_cutting(args.output, fps=args.fps)
+            print(json.dumps(result, indent=2))
         elif args.command == "robot-demo":
             from .backends.robot import run_robot
 
