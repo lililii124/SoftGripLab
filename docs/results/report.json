@@ -1,0 +1,110 @@
+{
+  "version": "0.1.0",
+  "seed": 7,
+  "data_source": "synthetic analytic uniaxial ramp-hold; not physical experiments",
+  "geometry": {
+    "thickness_m": 0.02,
+    "area_m2": 0.0004
+  },
+  "truth": {
+    "equilibrium_pa": 35000,
+    "branch_pa": 65000,
+    "relaxation_s": 0.6
+  },
+  "fit": {
+    "material": {
+      "equilibrium_pa": 34990.79566990788,
+      "branch_pa": 64861.41834127422,
+      "relaxation_s": 0.6001969975121879
+    },
+    "weighted_rmse": 0.9384696218184622,
+    "jacobian_condition": 7.317330640998555,
+    "log_parameter_std": [
+      0.00041517471808289407,
+      0.0008685015926434858,
+      0.001503502330142469
+    ],
+    "warnings": [],
+    "evaluations": 20
+  },
+  "training_protocols": [
+    {
+      "amplitude_m": 0.0008,
+      "ramp_s": 0.12
+    },
+    {
+      "amplitude_m": 0.0012,
+      "ramp_s": 0.8
+    }
+  ],
+  "noise_std_n": 0.005,
+  "held_out": {
+    "amplitude_m": 0.0005,
+    "ramp_s": 0.035,
+    "relative_l2_error": 0.0009167135291563551
+  },
+  "two_branch_mismatch_relative_l2_error": 0.11232053307046508,
+  "parameter_relative_errors": {
+    "equilibrium_pa": 0.0002629808597749417,
+    "branch_pa": 0.0021320255188581605,
+    "relaxation_s": 0.00032832918698000313
+  },
+  "grasp_spec": {
+    "mass_kg": 0.05,
+    "friction": 0.5,
+    "strain_limit": 0.08,
+    "safety_factor": 1.2,
+    "gravity_m_s2": 9.81
+  },
+  "plan": {
+    "closure_m": 0.001067427677565031,
+    "required_strain": 0.05337138387825155,
+    "feasible": true,
+    "assumption": "known acceleration envelope and friction; fitted material point estimate"
+  },
+  "policies": {
+    "fixed_closure": {
+      "min_margin_n": -0.0643012403264015,
+      "min_design_margin_n": -0.1924012403264015,
+      "peak_strain": 0.04,
+      "sticking_feasible": false,
+      "design_feasible": false,
+      "strain_limit_exceeded": false
+    },
+    "ideal_force_control": {
+      "min_margin_n": 0.15949999999999998,
+      "min_design_margin_n": 0.031399999999999983,
+      "peak_strain": 0.05332252049182974,
+      "sticking_feasible": true,
+      "design_feasible": true,
+      "strain_limit_exceeded": false
+    },
+    "identified_closure": {
+      "min_margin_n": 0.12831312981781007,
+      "min_design_margin_n": 0.000213129817810076,
+      "peak_strain": 0.05337138387825154,
+      "sticking_feasible": true,
+      "design_feasible": true,
+      "strain_limit_exceeded": false
+    }
+  },
+  "pulse": {
+    "start_s": 2.5,
+    "duration_s": 0.2,
+    "peak_m_s2": 3.0,
+    "equivalent_inertial_impulse_ns": 0.019098593171027446
+  },
+  "limitations": [
+    "Uniform small-strain model; no spatial contact pressure or damage.",
+    "Friction is supplied, not identified from normal compression.",
+    "Sticking feasibility only; no slip trajectory or robot dynamics.",
+    "Acceleration pulse is prescribed base excitation, not a resolved impact.",
+    "Planner knows the pulse envelope; force-control baseline has ideal bandwidth.",
+    "Faster held-out synthetic loading does not establish real impact validity."
+  ],
+  "environment": {
+    "python": "3.11.10",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "free_motion_exact_drop_m": 0.040638597439135296,
+  "free_motion_time_step_errors_m": {
+    "mpm_frictionless": 3.1930666678781083e-07,
+    "mpm_frictionless_halfdt": 8.275536048096832e-08
+  },
+  "frictional_peak_drop_m": {
+    "mpm": 0.0004531485374407243,
+    "mpm_grid32": 0.0004820184401075761
+  },
+  "spatial_convergence_established": false
+}

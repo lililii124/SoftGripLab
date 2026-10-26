@@ -1,0 +1,25 @@
+{
+  "reference_commit": "fd8ed2caa40a50d01992420660f68ae6ce0d084f",
+  "verified_git_blob_sha1": {
+    "boundaries.py": "42bcc2c499d3accbfeb87c92f1ca7b4f583b3cc1",
+    "contact.py": "16ca2bd150b7f531ddb334e317256a7d6e84733e",
+    "contact_laws.py": "bf7e9c398ba12d14300564b329bfb4cacc416b90",
+    "core.py": "d0fd6a4e96730fe31d6c0512acddac72e5d6331e",
+    "export.py": "c63793a32e959c61fcb64eb06456873bdc7b9377",
+    "initialization.py": "4f48e24e8078f2a4c8636ddc176c78e90107d87b",
+    "__init__.py": "b3582e545eab34fc3c45c2b2689378776a4e8713",
+    "materials/elastic.py": "614f875c963e6e7c4f5ca0b4980e770a4987159a",
+    "materials/history.py": "ca4721d91a8ac752423806cdf2404a76226d9d9e",
+    "materials/hjc.py": "d108be3c44f0455dc34ddf6f30f81efd6d7c3785",
+    "materials/isotropic_brittle.py": "887aaeda0466946f0b20563ae32b7614cde34099",
+    "materials/jh2.py": "6f37b5080c97e4c0ef48dfb3fd34c20138195b97",
+    "materials/johnson_cook.py": "b7ff295cf3208bfe43bf35a8ba78723c19fff1bf",
+    "materials/mat111_point.py": "6035164bb9cd623f4ab54b3ee44044fa97dc0517",
+    "materials/plastic.py": "73aefe879e1c14c6040732489c3099779251ef95",
+    "materials/rht.py": "dcef2aea34c2af95d80eccbf00a84d8cbd5ce1f5",
+    "materials/shock_metal.py": "0b559b63a6e6a0ca1a423361bfb0ce61fb8795c3",
+    "materials/steinberg.py": "54ad9f62c76327b869ced00d7f1b2fc09ee0c6cf",
+    "materials/woven.py": "998f014b30c0bb4ccbb5dbd7dcf989f30568c0de",
+    "materials/__init__.py": "1b3d0c61f9a9c77c22b8ba0114527de4bc239ea8"
+  }
+}

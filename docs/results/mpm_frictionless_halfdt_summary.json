@@ -1,0 +1,40 @@
+{
+  "backend": "jax-mpm",
+  "material": "Neo-Hookean; independent of SLS identification demo",
+  "upstream_reference_commit": "fd8ed2caa40a50d01992420660f68ae6ce0d084f",
+  "loaded_source_sha256": {
+    "core.py": "4a3895ffe15ab28dd0981e94bb0be5f2030b12714f02feae5e917c706e6b71ae",
+    "boundaries.py": "946589362a8d45862690aebfb2887b8f112b4438fc039f5c370d3a968f65d5d0",
+    "initialization.py": "9f59a5ff637010a4e158a197aa068d103e7b062e520076a566ee06ade0ad471d",
+    "materials/elastic.py": "fbfaa811e5196c2fac7b38897cc6bc0f74c87a9df1f9bc9fa6d658b657657ff8"
+  },
+  "grid": 24,
+  "particles": 1728,
+  "frames": 40,
+  "steps": 2200,
+  "dt_s": 5.4545454545454546e-05,
+  "young_pa": 35000,
+  "poisson": 0.3,
+  "density_kg_m3": 1000.0,
+  "friction": 0.0,
+  "total_closure_m": 0.003,
+  "duration_s": 0.12,
+  "shock": {
+    "start_s": 0.075,
+    "duration_s": 0.015,
+    "peak_m_s2": 20.0
+  },
+  "min_det_f": 0.9387940059135917,
+  "final_com_drop_m": 0.040638514683774815,
+  "compile_seconds": 0.5606685999664478,
+  "solver_seconds": 2.9922765000374056,
+  "jax_version": "0.12.1.dev20261022",
+  "device": "cpu:0",
+  "limitations": [
+    "Infinite planar jaws with upstream grid-based Coulomb boundaries.",
+    "Contact positions have grid-scale error; convergence is not established.",
+    "No actuator dynamics, finite fingers, damage, or local impactor.",
+    "The material is elastic, not calibrated rate-dependent rubber.",
+    "Frame-sampled determinant minima do not replace upstream per-step state checks."
+  ]
+}

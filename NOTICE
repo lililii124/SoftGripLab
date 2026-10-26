@@ -1,0 +1,16 @@
+SoftGripLab
+Copyright (c) 2026 SoftGripLab contributors
+
+This project uses external tools without vendoring their implementations:
+- NumPy: https://numpy.org/ (BSD-3-Clause)
+- SciPy: https://scipy.org/ (BSD-3-Clause)
+- Matplotlib: https://matplotlib.org/ (Matplotlib license)
+- pytest: https://pytest.org/ (MIT)
+- JAX: https://github.com/jax-ml/jax (Apache-2.0)
+- JAX-MPM: https://github.com/lililii124/jax-mpm (GPL-3.0)
+  Optional integration reference: fd8ed2caa40a50d01992420660f68ae6ce0d084f.
+  The upstream solver itself preserves its own Taichi and other notices.
+
+The standard linear solid and Coulomb friction relations are established models.
+SoftGripLab's contribution is the identification/grasp benchmark workflow,
+validation cases, data conventions and adapter scene, not those constitutive laws.

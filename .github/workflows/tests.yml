@@ -1,0 +1,20 @@
+name: Reference benchmark
+on: [push, pull_request]
+jobs:
+  reference:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install '.[test]'
+      - run: python -m pytest -q
+      - run: python -m softgriplab demo --output outputs/demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-${{ matrix.python }}
+          path: outputs/demo/
