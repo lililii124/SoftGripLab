@@ -1,0 +1,10 @@
+{
+  "adaptive_cycle.npz": "87eafbac4da1bd28928eda6effe58169e6254926f8e46233a1fb174560e4cc2d",
+  "dense_validation.npz": "8d5488bede8eff2afc66023b4fff1d4c55936687bf1b802a5625c8741e40616e",
+  "nominal_geometry_library.npz": "26360820c55340cd31b3d5a7e5303118ecca2d1b51116c2dfa9ce7095de4a79e",
+  "observations.npz": "f3034c6048d42a04953ecd6822c347e30278b551c371a2e5cd0f5f19274f9b23",
+  "reconstructed_geometry_library.npz": "c3e3a1625291127c09c11ae40d329d061adaa55e1ccd2713efb969d54143806c",
+  "scan.npz": "cb118f03379b912280622ccc6b4386a125462ce7a36a3321472d2714a5ef4d17",
+  "shape_identification.gif": "84d1eb1c607e786bff18834b8a790549d5e3bf9eb3be2f6092af91d84a8d5992",
+  "shape_identification.png": "6f4e55fcec05c33f65eddf6a0be57e08c1dfa4bb0b9701a695f92204e5fe3445"
+}

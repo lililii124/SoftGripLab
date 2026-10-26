@@ -14,6 +14,7 @@ captures the actual PyBullet state, with a simultaneous finger close-up.
 | Adhesive transport | Panda + JAX-MPM; dry adhesion | Material surface and measured head motion |
 | Continuous cutting | Panda + PeriPy; moving blade and dynamic bonds | Material points, connectivity and measured knife pose |
 | Complex-shape identification | scikit-fem Neo-Hookean FEM + finite-range adhesion | Independently solved reference/identified meshes and tool reaction |
+| Unknown surface | Partial-scan reconstruction + the same hyperelastic FEM | Reference and reconstructed geometries, each solved with its own material parameters |
 
 ## Generate the gallery
 

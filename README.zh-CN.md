@@ -55,6 +55,12 @@ python -m pytest -q
 
 左：参考材料；右：辨识参数。两侧均由细网格重新求解。
 
+[未知形貌：局部点云重建与材料辨识](docs/UNKNOWN_SURFACE.md)。
+
+![参考物体与重建物体对照](docs/results/unknown_surface/shape_identification.gif)
+
+左：参考；右：重建形貌与辨识材料。适用范围见模型说明。
+
 [主动力学辨识](docs/ACTIVE_IDENTIFICATION.md)：接触探测、参数歧义与上提脱粘预测。
 
 ![两组可解释初始观测的参数，对释放给出不同预测](docs/results/active_identification/ambiguity_release.gif)

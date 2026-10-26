@@ -38,6 +38,17 @@ def main(argv=None):
     shape.add_argument("--no-render", action="store_true")
     shape_replay = commands.add_parser("animate-shape-identification", help="Replay saved 3D identification meshes")
     shape_replay.add_argument("--source", type=Path, default=Path("outputs/shape_identification"))
+    unknown = commands.add_parser("unknown-surface-identification", help="Partial point cloud to geometry and material identification")
+    unknown.add_argument("--output", type=Path, default=Path("outputs/unknown_surface"))
+    unknown.add_argument("--library-count", type=int, default=13)
+    unknown.add_argument("--trials", type=int, default=12)
+    unknown.add_argument("--seed", type=int, default=73)
+    unknown.add_argument("--no-dense", action="store_true")
+    unknown.add_argument("--no-render", action="store_true")
+    reconstruct = commands.add_parser("reconstruct-surface", help="Reconstruct a registered partial xyz scan under a swept-ellipse prior")
+    reconstruct.add_argument("csv", type=Path)
+    reconstruct.add_argument("--output", type=Path, default=Path("outputs/reconstructed_surface"))
+    reconstruct.add_argument("--sigma-m", type=float, default=4e-5)
     fit = commands.add_parser(
         "identify", help="Fit one or more uniformly sampled compression CSVs"
     )
@@ -174,7 +185,29 @@ def main(argv=None):
     cut_replay.add_argument("--source", type=Path, default=Path("outputs/banana_robot"))
     args = parser.parse_args(argv)
     try:
-        if args.command == "shape-identification":
+        if args.command == "reconstruct-surface":
+            import numpy as np
+            from .surface_geometry import ScannedContact, reconstruct_surface
+            from .complex_contact import LENGTH_M
+            from .meshes import write_mesh
+
+            points = np.loadtxt(args.csv, delimiter=",", skiprows=1, ndmin=2)
+            geometry, report = reconstruct_surface(points, sigma_m=args.sigma_m)
+            model = ScannedContact(geometry, (20,8,8))
+            args.output.mkdir(parents=True, exist_ok=True)
+            np.savez_compressed(args.output/"geometry.npz", stations=geometry.stations, values=geometry.values,
+                                input_points_m=points, length_scale_m=LENGTH_M)
+            write_mesh(args.output, model.points*LENGTH_M, model.tets, model.faces)
+            (args.output/"report.json").write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
+            print(json.dumps({"output": str(args.output), **report}, indent=2))
+        elif args.command == "unknown-surface-identification":
+            from .unknown_surface import run_unknown_surface
+
+            result = run_unknown_surface(args.output, library_count=args.library_count, trials=args.trials,
+                                         seed=args.seed, dense=not args.no_dense, render=not args.no_render)
+            print(json.dumps({"output": str(args.output), "surface":result["surface"],
+                              "summary":result["summary"], "dense_validation":result["dense_validation"]}, indent=2))
+        elif args.command == "shape-identification":
             from .shape_identification import run_shape_identification
 
             if args.materials < 2 or args.trials < 1 or args.library_count < 5:

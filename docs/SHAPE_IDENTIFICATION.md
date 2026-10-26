@@ -45,6 +45,9 @@ This version identifies shear modulus `mu` and work of adhesion `W`. Poisson
 ratio `nu = 0.35`, geometry, fixtures and interface length scales are known.
 It does not simultaneously estimate geometry or a general hyperelastic law.
 
+For partial scans with unknown reference geometry, see the separate
+[surface reconstruction and material-fitting benchmark](UNKNOWN_SURFACE.md).
+
 The sphere interacts with the deformed boundary using its actual signed gap.
 Positive gap gives a finite-range, triangular tensile traction; negative gap
 gives compressive penalty contact. The traction integral is `W`. Forces and the

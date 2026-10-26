@@ -56,6 +56,13 @@ python -m pytest -q
 
 Left: reference. Right: identified parameters. Both are solved again on a dense mesh.
 
+**Unknown surface geometry:**
+[partial-scan reconstruction and material fitting](docs/UNKNOWN_SURFACE.md).
+
+![Reference and scan-reconstructed material](docs/results/unknown_surface/shape_identification.gif)
+
+Left: reference. Right: reconstructed geometry and identified material. Shape-prior assumptions apply.
+
 **Active contact identification:** probe an unknown adhesive specimen and
 predict release. [Run and inspect the benchmark](docs/ACTIVE_IDENTIFICATION.md).
 

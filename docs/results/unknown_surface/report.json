@@ -1,0 +1,68 @@
+{
+  "scope": "two-stage geometry then material inversion; one synthetic geometry, three independent materials",
+  "surface": {
+    "scan_points": 360,
+    "geometry_coefficients": 52,
+    "scan_normal_rmse_m": 3.730464399668156e-05,
+    "weighted_scan_jacobian_condition": 33.88005992666405,
+    "source": "unlabelled xyz only; no true surface or correspondence supplied",
+    "prior": "registered solid swept ellipses, smooth axial profiles, known end planes",
+    "uncertainty": "conditioning diagnostic only; no calibrated confidence interval",
+    "surface_rmse_m": 6.288684359084786e-05,
+    "hidden_surface_rmse_m": 9.23144248316262e-05,
+    "evaluation": "same axial/angle coordinates, independent dense validation surface; not used by fitter"
+  },
+  "summary": {
+    "nominal_geometry": {
+      "mean_mu_relative_error": 0.1540308711991041,
+      "mean_work_relative_error": 0.17136154204896545,
+      "mean_whitened_force_rmse": 5.559996596767904
+    },
+    "reconstructed_geometry": {
+      "mean_mu_relative_error": 0.022623182836243726,
+      "mean_work_relative_error": 0.027669185569576427,
+      "mean_whitened_force_rmse": 2.306466442882677
+    }
+  },
+  "seed": 73,
+  "noise_trials": 12,
+  "library_ratios_per_geometry": 13,
+  "probe_sites": 3,
+  "library_seconds_this_run_including_cache_reads": {
+    "nominal_geometry": 0.07369300001300871,
+    "reconstructed_geometry": 31.751798299956135
+  },
+  "loading": "failed increments use equilibrium-resolved bisection; prescribed observation poses do not change",
+  "learning": "no neural training; fixed small surface fit and FEM ratio libraries",
+  "dense_validation": {
+    "checks": [
+      {
+        "min_j": 0.8603640467267664,
+        "maximum_residual": 1.9675401614904775e-06
+      },
+      {
+        "min_j": 0.8863039307474992,
+        "maximum_residual": 1.9714904212417284e-06
+      }
+    ],
+    "force_relative_l2_error": 0.07656856818029628,
+    "mean_absolute_force_error_n": 0.0020372285118599874,
+    "position_rmse_m": 7.15597026300772e-05
+  },
+  "limitations": [
+    "Known axial registration, end planes, solid topology and swept-ellipse prior.",
+    "Hidden surface completion depends on the geometric prior; arbitrary unseen shapes are not identifiable.",
+    "Reconstruction is frozen during material fitting; geometric uncertainty is not marginalized.",
+    "Homogeneous Neo-Hookean modulus and adhesion work; known Poisson ratio and interface range.",
+    "No real scanner, experiment, robot or arbitrary-shape generalization is validated.",
+    "Nominal-geometry fitting is a mismatch ablation, not a strong joint-geometry optimization baseline.",
+    "Both libraries use the exact same tool poses planned from the reconstructed scan."
+  ],
+  "elapsed_seconds_this_run": 547.0615211999975,
+  "source_sha256": {
+    "surface_geometry.py": "58d4df55b9a055f61ed040577c9b90f684e8eafb26b32b1dd62fda03022e0451",
+    "unknown_surface.py": "0db19ade08096ee927cfbe7e5ba5a8e7471a5461e2efa36670d81800e1a9e43b",
+    "complex_contact.py": "8414e83cbd097347c435a3c4f4e94a26a5e6f4b2b64e8a8e82ceb65c58485c70",
+    "shape_identification.py": "8e1894166ea4883417e70a0687cff708e12635550f8f8d0e0f1da4142f6c34d4"
+  }
+}
