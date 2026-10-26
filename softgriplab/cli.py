@@ -104,14 +104,14 @@ def main(argv=None):
         "adhesive-robot", help="Panda and deformable payload coupled by adhesive forces"
     )
     coupled.add_argument("--output", type=Path, default=Path("outputs/adhesive_robot"))
-    coupled.add_argument("--work", type=float, default=6.0)
-    coupled.add_argument("--grid", type=int, default=32)
+    coupled.add_argument("--work", type=float, default=4.0)
+    coupled.add_argument("--grid", type=int, default=40)
     coupled.add_argument(
-        "--release-mode", choices=("inertial", "switch"), default="switch"
+        "--release-mode", choices=("inertial", "switch"), default="inertial"
     )
     coupled.add_argument("--release-duration", type=float, default=0.04)
     coupled.add_argument("--release-gain", type=float, default=0.6)
-    coupled.add_argument("--dt-factor", type=float, default=1.0)
+    coupled.add_argument("--dt-factor", type=float, default=0.5)
     coupled.add_argument("--coupling-dt", type=float, default=1 / 120)
     coupled.add_argument("--fps", type=int, default=15)
     coupled.add_argument("--no-render", action="store_true")

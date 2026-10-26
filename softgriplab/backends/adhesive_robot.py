@@ -96,14 +96,14 @@ def _target(time_s, release_mode="switch", release_duration_s=0.12):
 def run_adhesive_robot(
     output,
     *,
-    work_j_m2=6.0,
-    grid=32,
+    work_j_m2=4.0,
+    grid=40,
     render=False,
     fps=15,
     coupling_dt=1 / 120,
-    dt_factor=1.0,
+    dt_factor=0.5,
     young_pa=12000.0,
-    release_mode="switch",
+    release_mode="inertial",
     release_duration_s=0.04,
     release_position_gain=0.6,
 ):

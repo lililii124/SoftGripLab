@@ -33,8 +33,7 @@ python -m softgriplab mpm-adhesion --work 0 --output outputs/continuum_nonadhesi
 python -m softgriplab animate-adhesion
 ```
 
-The dense gallery uses 9,504 tetrahedra per FEM specimen and 45,968 material
-points per surface-adhesion case. Its output folders and collector are:
+The dense gallery's output folders and collector are:
 
 ```bash
 python -m softgriplab fem-demo --output outputs/dense_compression
@@ -78,7 +77,8 @@ JAX. The robot uses PyBullet's existing Panda meshes and CPU camera.
 Frame times and parameters are stored in the CSV/JSON files. Animations have no text overlays. Force insets replay the recorded axial
 contact reaction; scales remain fixed throughout each clip. Timing: 3 s of FEM motion plays over about 4.5 s;
 0.13 s of MPM pull-off plays over about 5 s to expose the contact sequence.
-Robot playback is approximately real time. Robot trace timestamps describe the
+Robot playback is approximately real time, with the acceleration-release segment
+shown at 8x slow motion. Robot trace timestamps describe the
 state after each integration step. Grey tools and muted rubber colors identify
 materials; they do not encode strain or damage. No rainbow field is implied.
 
@@ -109,6 +109,18 @@ use `mpm-adhesion` and `animate-adhesion` for resolved deformation.
 Upstream implementations: [Bullet FEM example](https://github.com/bulletphysics/bullet3/blob/master/examples/pybullet/examples/deformable_torus.py),
 [JAX-MPM](https://github.com/lililii124/jax-mpm),
 [Panda asset](https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_data/franka_panda).
+
+## Acceleration-driven adhesive release
+
+```bash
+python -m pip install '.[mpm,robot]'
+python -m softgriplab adhesive-robot
+python -m softgriplab animate-adhesive-robot --source docs/results/inertial_release/fast
+```
+
+The fifth animation replays the solved material surface and measured head motion.
+Adhesion remains enabled; a faster upward withdrawal opens the interface.
+[Model and matched slow-withdrawal control](ADHESIVE_ROBOT.md).
 
 ## Sequential robot cutting
 

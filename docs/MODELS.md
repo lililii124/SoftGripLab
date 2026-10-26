@@ -124,11 +124,11 @@ but it is no longer used to animate a robot attachment.
 Scene 5 couples motor-driven Panda dynamics to an unanchored Neo-Hookean MPM
 block. The measured sphere center drives upstream Dugdale contact on the actual
 top material layer. Its interval-averaged reaction loads the next robot step.
-Gravity acts throughout; switching adhesion off after landing releases the
-object. A compression-contact gate prevents engagement before pressing.
-Parameters, controls, time-step comparison and limitations are recorded in
-[the published switch-release scene](ADHESIVE_ROBOT_SWITCH.md).
-The acceleration-driven release adapter is experimental; see [its checks](ADHESIVE_ROBOT.md).
+Gravity acts throughout. A compression-contact gate prevents engagement before
+pressing; adhesion remains enabled during the subsequent upward acceleration.
+The interface opens beyond its attraction range and the payload falls onto the
+table. A matched slow withdrawal remains attached. Parameters, controls and a
+halved coupling-step check are recorded in [the release model](ADHESIVE_ROBOT.md).
 
 ## References
 

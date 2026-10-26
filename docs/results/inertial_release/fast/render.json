@@ -1,0 +1,14 @@
+{
+  "trajectory_sha256": "b3924e698c2eeba3c67ed70cb66b2c5dbbfafa2a7349d51788f30fcf70fc6112",
+  "deformation_scale": 1.0,
+  "geometry": "saved material surface nodes and measured Panda joints",
+  "force_trace_sha256": "cb6e5e0cf8f01ff0dcc80ef7511db25962129dcfaf77279441c888ef05e0b003",
+  "force_component": "-reaction_z_n",
+  "text_overlays": false,
+  "max_replayed_tool_center_error_m": 0.0,
+  "frames": 139,
+  "renderer": "PyBullet TinyRenderer",
+  "force_trace_hash_normalization": "CRLF to LF",
+  "surface_replay_sha256": "b2fe132b949acc532b2f741b0f9e1a650d251298bdfa28193ca8907f344004b9",
+  "release_slow_motion_factor": 8
+}

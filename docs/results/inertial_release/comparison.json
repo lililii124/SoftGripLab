@@ -1,0 +1,31 @@
+{
+  "fast": {
+    "first_separated_sample_s": 4.416666666666667,
+    "head_acceleration_at_separation_m_s2": 34.33206081390381,
+    "coupling_dt_s": 0.008333333333333333,
+    "max_measured_upward_acceleration_m_s2": 37.13550567626953,
+    "final_com_m": [
+      0.06032657305602579,
+      0.1264422505048334,
+      0.04567459885194809
+    ]
+  },
+  "fine": {
+    "first_separated_sample_s": 4.420833333333333,
+    "head_acceleration_at_separation_m_s2": 36.95869445800781,
+    "coupling_dt_s": 0.004166666666666667,
+    "max_measured_upward_acceleration_m_s2": 37.23421096801758,
+    "final_com_m": [
+      0.06045522619063175,
+      0.12489878254786209,
+      0.04563811306592857
+    ]
+  },
+  "slow": {
+    "detached": false,
+    "max_measured_upward_acceleration_m_s2": 0.11243820190429688
+  },
+  "identical_fast_slow_prefix_through_s": 4.4,
+  "adhesion_parameters_changed_during_release": false,
+  "note": "Qualitative release robustness under a halved robot coupling step; not spatial convergence or experimental validation."
+}

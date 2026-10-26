@@ -26,7 +26,7 @@ Without adhesion (left), with adhesion (right).
 
 ![Panda carrying a deformable object](docs/assets/05_adhesive_robot.gif)
 
-[Published switch-off release](docs/ADHESIVE_ROBOT_SWITCH.md). Acceleration-driven release is under validation.
+[Accelerate upward to detach](docs/ADHESIVE_ROBOT.md). Release shown in slow motion.
 
 ### Continuous cutting
 

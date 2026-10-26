@@ -26,7 +26,7 @@
 
 ![Panda 搬运柔性物体](docs/assets/05_adhesive_robot.gif)
 
-当前展示[关闭黏附后释放](docs/ADHESIVE_ROBOT_SWITCH.md)；加速度上提脱粘正在验证。
+[加速度上提脱粘](docs/ADHESIVE_ROBOT.md)，释放阶段慢放。
 
 ### 连续切割
 

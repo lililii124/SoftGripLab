@@ -1,4 +1,6 @@
-# Adhesive robot / deformable payload
+# Archived switch-release example
+
+The current gallery uses [acceleration-driven release](ADHESIVE_ROBOT.md).
 
 The Panda presses, engages adhesion, lifts, carries, sets down and releases a
 30 mm elastic block with mass 27 g. The animation replays MPM material positions
@@ -56,9 +58,9 @@ Use Python 3.12+ and the pinned JAX-MPM dependency:
 
 ```bash
 python -m pip install '.[mpm,robot]'
-python -m softgriplab adhesive-robot --output outputs/adhesive_robot
-python -m softgriplab adhesive-robot --work 0 --no-render --output outputs/adhesive_robot_control
-python -m softgriplab adhesive-robot --coupling-dt 0.004166666666666667 --no-render --output outputs/adhesive_robot_fine
+python -m softgriplab adhesive-robot --release-mode switch --grid 32 --work 6 --dt-factor 1 --output outputs/adhesive_robot
+python -m softgriplab adhesive-robot --release-mode switch --grid 32 --work 0 --dt-factor 1 --no-render --output outputs/adhesive_robot_control
+python -m softgriplab adhesive-robot --release-mode switch --grid 32 --work 6 --dt-factor 1 --coupling-dt 0.004166666666666667 --no-render --output outputs/adhesive_robot_fine
 ```
 
 Set `JAX_PLATFORMS=cpu` to explicitly select CPU. Windows may need MSVC to build

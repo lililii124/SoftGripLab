@@ -147,6 +147,24 @@ The software stack uses Bullet's existing FEM and articulated-body solvers,
 JAX-MPM's existing continuum/contact code, and the upstream Panda asset. No
 experimental material calibration or real-robot validation is claimed.
 
+## Acceleration-driven adhesive release
+
+The [fast and slow withdrawal runs](results/inertial_release/comparison.json)
+have identical recorded states through 4.4 s and identical material/interface
+parameters. Both first carry the block clear of the table. Adhesion remains
+enabled throughout release, with no anchors or payload attachment constraints.
+
+The fast run first separates at 4.4167 s while the measured head acceleration is
+34.33 m/s² upward. The slow run remains attached. Halving the robot coupling step
+gives separation at 4.4208 s with positive upward acceleration. Both fast cases
+subsequently have zero head reaction and land on the table. This checks the
+release outcome under temporal refinement, without asserting spatial convergence.
+
+Archive tests check active contact, gap, positive material determinants,
+free-flight momentum balance, unchanged adhesion activation and render provenance.
+The reported force averages the preceding coupling interval: its first separated
+endpoint can still report force; subsequent detached intervals report zero.
+
 ## Legacy sequential cutting archive
 
 [The archived DiSECt validation](CUTTING_DISECT.md#evidence-and-limits) records a complete
