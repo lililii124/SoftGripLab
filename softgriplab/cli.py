@@ -65,9 +65,9 @@ def main(argv=None):
     )
     fem.add_argument("--scene", choices=["compression", "grasp"], default="compression")
     fem.add_argument("--output", type=Path, default=Path("outputs/fem_compression"))
-    fem.add_argument("--cells", type=int, default=7)
+    fem.add_argument("--cells", type=int, default=12)
     fem.add_argument("--frames", type=int, default=91)
-    fem.add_argument("--dt", type=float, default=0.001)
+    fem.add_argument("--dt", type=float, default=0.0005)
     fem.add_argument("--friction", type=float, default=0.7)
     fem.add_argument("--no-render", action="store_true")
     continuum = commands.add_parser(
@@ -76,7 +76,7 @@ def main(argv=None):
     continuum.add_argument(
         "--output", type=Path, default=Path("outputs/continuum_adhesion")
     )
-    continuum.add_argument("--grid", type=int, default=24)
+    continuum.add_argument("--grid", type=int, default=36)
     continuum.add_argument("--frames", type=int, default=101)
     continuum.add_argument("--work", type=float, default=14.4)
     continuum.add_argument("--dt-factor", type=float, default=1.0)

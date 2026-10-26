@@ -33,7 +33,7 @@ def _surface_triangles(reference):
 
 
 def run_continuum_adhesion(
-    output, *, grid=24, frames=101, work_j_m2=14.4, dt_factor=1.0
+    output, *, grid=36, frames=101, work_j_m2=14.4, dt_factor=1.0
 ):
     if type(grid) is not int or grid < 16 or type(frames) is not int or frames < 10:
         raise ValueError("grid >= 16 and frames >= 10 are required")

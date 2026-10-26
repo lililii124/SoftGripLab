@@ -86,8 +86,9 @@ def render_fem(source):
     cid = p.connect(p.DIRECT)
     frames = []
     try:
-        tools = [_box(p, cid, h) for h in half]
         for i, t in enumerate(times):
+            p.resetSimulation(physicsClientId=cid)
+            tools = [_box(p, cid, h) for h in half]
             body = _mesh(p, cid, points[i], triangles)
             for tool, pos in zip(tools, tool_positions[i]):
                 p.resetBasePositionAndOrientation(
@@ -100,27 +101,20 @@ def render_fem(source):
                 [0, 0, 0.035 if grasp else 0.023],
                 0.26 if grasp else 0.23,
                 650,
-                440,
+                510,
                 yaw=38,
                 pitch=-17,
             )
             image = Image.new("RGB", (960, 560), BG)
-            image.paste(camera, (0, 65))
+            image.paste(camera, (0, 45))
             draw = ImageDraw.Draw(image)
             title = (
-                "Soft block / grip, lift and release"
+                "Grip · Lift · Release"
                 if grasp
-                else "Compression / hold / release"
+                else "Compression"
             )
             draw.text((23, 12), title, font=font(24), fill=INK)
-            draw.text(
-                (24, 45),
-                f"t = {t:.2f} s    E = {report['young_pa']/1000:g} kPa    friction = {report['friction']:g}",
-                font=font(14),
-                fill=GRAY,
-            )
-            draw.text((685, 87), "Material section", font=font(18), fill=INK)
-            draw.text((685, 114), "Advected solver nodes", font=font(13), fill=GRAY)
+            draw.text((685, 12), "Section", font=font(18), fill=INK)
 
             def project(point):
                 return (805 + point[0] * 3300, 450 - point[2] * 3300)
@@ -138,21 +132,6 @@ def render_fem(source):
                 draw.rectangle(
                     (x1, y1, x2, y2), fill="#b0b0a6", outline="#83847b", width=1
                 )
-            draw.line((702, 488, 768, 488), fill=INK, width=2)
-            draw.text((715, 491), "20 mm", font=font(12), fill=GRAY)
-            widths = np.ptp(points[i], axis=0) * 1000
-            draw.text(
-                (24, 512),
-                f"Specimen width {widths[0]:.1f} mm    height {widths[2]:.1f} mm",
-                font=font(18),
-                fill=INK,
-            )
-            draw.text(
-                (24, 540),
-                f"Neo-Hookean FEM / {report['tetrahedra']} tetrahedra / deformation scale 1:1",
-                font=font(12),
-                fill=GRAY,
-            )
             frames.append(image)
             p.removeBody(body, physicsClientId=cid)
     finally:
@@ -187,41 +166,28 @@ def render_adhesion_pair(source, comparison, output):
             data.append({k: d[k].copy() for k in d.files})
     if not np.allclose(data[0]["time_s"], data[1]["time_s"]):
         raise ValueError("adhesion pair requires equal frame times")
-    traces = [
-        np.genfromtxt(folder / "observables.csv", delimiter=",", names=True)
-        for folder in folders
-    ]
     cid = p.connect(p.DIRECT)
     frames = []
     try:
-        base = _box(p, cid, [0.038, 0.038, 0.003])
-        p.resetBasePositionAndOrientation(
-            base, [0.05, 0.05, 0.012], [0, 0, 0, 1], physicsClientId=cid
-        )
         radius = float(data[0]["sphere_radius_m"])
-        visual = p.createVisualShape(
-            p.GEOM_MESH,
-            fileName=str(Path(pybullet_data.getDataPath()) / "sphere_smooth.obj"),
-            meshScale=[radius] * 3,
-            rgbaColor=[0.65, 0.66, 0.63, 1],
-            physicsClientId=cid,
-        )
-        sphere = p.createMultiBody(0, -1, visual, physicsClientId=cid)
         for i, t in enumerate(data[0]["time_s"]):
+            # Bullet retains visual shapes after removeBody. Reset the offline
+            # renderer between frames so dense meshes do not accumulate in RAM.
+            p.resetSimulation(physicsClientId=cid)
+            base = _box(p, cid, [0.038, 0.038, 0.003])
+            p.resetBasePositionAndOrientation(
+                base, [0.05, 0.05, 0.012], [0, 0, 0, 1], physicsClientId=cid
+            )
+            visual = p.createVisualShape(
+                p.GEOM_MESH,
+                fileName=str(Path(pybullet_data.getDataPath()) / "sphere_smooth.obj"),
+                meshScale=[radius] * 3,
+                rgbaColor=[0.65, 0.66, 0.63, 1],
+                physicsClientId=cid,
+            )
+            sphere = p.createMultiBody(0, -1, visual, physicsClientId=cid)
             frame = Image.new("RGB", (960, 560), BG)
             draw = ImageDraw.Draw(frame)
-            draw.text(
-                (23, 12),
-                "Surface adhesion / indentation and pull-off",
-                font=font(24),
-                fill=INK,
-            )
-            draw.text(
-                (24, 45),
-                f"t = {t:.3f} s    Neo-Hookean MPM + finite-range surface traction",
-                font=font(14),
-                fill=GRAY,
-            )
             for panel, case in enumerate(data):
                 body = _mesh(p, cid, case["position_m"][i], case["surface_triangles"])
                 p.resetBasePositionAndOrientation(
@@ -231,31 +197,12 @@ def render_adhesion_pair(source, comparison, output):
                     physicsClientId=cid,
                 )
                 picture = _camera(
-                    p, cid, [0.05, 0.05, 0.040], 0.20, 480, 360, yaw=35, pitch=-10
+                    p, cid, [0.05, 0.05, 0.040], 0.22, 480, 510, yaw=35, pitch=-10
                 )
-                frame.paste(picture, (480 * panel, 105))
+                frame.paste(picture, (480 * panel, 45))
                 caption = "Without adhesion" if panel == 0 else "With adhesion"
-                draw.text((24 + 480 * panel, 80), caption, font=font(19), fill=INK)
-                row = traces[panel][i]
-                draw.text(
-                    (24 + 480 * panel, 473),
-                    f"Sphere reaction {row['sphere_reaction_n']:+.2f} N",
-                    font=font(18),
-                    fill=INK,
-                )
-                draw.text(
-                    (24 + 480 * panel, 501),
-                    f"Surface uplift {row['max_surface_u_m']*1000:.2f} mm",
-                    font=font(15),
-                    fill=GRAY,
-                )
+                draw.text((24 + 480 * panel, 12), caption, font=font(19), fill=INK)
                 p.removeBody(body, physicsClientId=cid)
-            draw.text(
-                (24, 539),
-                "Saved 3D solver coordinates / deformation scale 1:1 / dry adhesion",
-                font=font(12),
-                fill=GRAY,
-            )
             frames.append(frame)
     finally:
         p.disconnect(physicsClientId=cid)

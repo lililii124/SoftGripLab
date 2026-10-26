@@ -31,14 +31,23 @@ python -m softgriplab mpm-adhesion --work 0 --output outputs/continuum_nonadhesi
 python -m softgriplab animate-adhesion
 ```
 
-Additional controls and refinement probes used for the committed evidence:
+The dense gallery uses 9,504 tetrahedra per FEM specimen and 45,968 material
+points per surface-adhesion case. Its output folders and collector are:
 
 ```bash
-python -m softgriplab fem-demo --scene grasp --cells 5 --frames 31 --friction 0 --no-render --output outputs/fem_grasp_zero
-python -m softgriplab fem-demo --cells 5 --frames 31 --no-render --output outputs/fem_compression_coarse
-python -m softgriplab fem-demo --dt .0005 --frames 31 --no-render --output outputs/fem_compression_halfdt
-python tools/collect_animations.py
+python -m softgriplab fem-demo --output outputs/dense_compression
+python -m softgriplab fem-demo --scene grasp --output outputs/dense_grasp
+python -m softgriplab fem-demo --scene grasp --friction 0 --no-render --output outputs/dense_grasp_zero
+python -m softgriplab mpm-adhesion --output outputs/dense_adhesion_14.4
+python -m softgriplab mpm-adhesion --work 0 --output outputs/dense_adhesion_0
+python -m softgriplab animate-adhesion --source outputs/dense_adhesion_14.4 --comparison outputs/dense_adhesion_0 --output outputs/gallery/dense_adhesion.gif
+python -m softgriplab robot-demo --output outputs/robot_minimal
+python tools/collect_dense_gallery.py
 ```
+
+The earlier temporal comparison is preserved under `legacy_refinement/`; the
+new spatial comparison uses equal 0.5 ms steps on 1,764 and 9,504 tetrahedra.
+This is a sensitivity check, not a claim of spatial convergence.
 
 The collector checks contact outcomes, deformation validity and render input
 hashes before replacing the gallery. It copies summaries, CSV observations and
@@ -64,7 +73,8 @@ retained for compatibility, but it no longer draws synthetic uniform strain.
 `animate-adhesion` renders the two saved continuum trajectories without importing
 JAX. The robot uses PyBullet's existing Panda meshes and CPU camera.
 
-Use the time printed on the frame: 3 s of FEM motion plays over about 4.5 s;
+Frame times and parameters are stored in the CSV/JSON files. Animations retain
+only short labels: 3 s of FEM motion plays over about 4.5 s;
 0.13 s of MPM pull-off plays over about 5 s to expose the contact sequence.
 Robot playback is approximately real time. Robot trace timestamps describe the
 state after each integration step. Grey tools and muted rubber colors identify

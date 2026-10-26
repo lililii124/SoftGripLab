@@ -1,12 +1,13 @@
 {
-  "fem_compression_coarse": {
-    "minimum_height_m_difference_m": 5.781067392247874e-06,
-    "maximum_width_m_difference_m": 0.00014637543036642026,
-    "final_height_m_difference_m": 1.9599285768334695e-05
-  },
-  "fem_compression_halfdt": {
-    "minimum_height_m_difference_m": 4.45670114601962e-06,
-    "maximum_width_m_difference_m": 6.939693619208154e-06,
-    "final_height_m_difference_m": 4.424383150500311e-06
+  "coarse_tetrahedra": 1764,
+  "dense_tetrahedra": 9504,
+  "coarse_dt_s": 0.0005,
+  "dense_dt_s": 0.0005,
+  "note": "Spatial sensitivity at equal dt; no claim of spatial convergence.",
+  "previous_temporal_probe": "legacy_refinement/refinement.json",
+  "absolute_differences_m": {
+    "minimum_height_m": 2.6473979630389777e-05,
+    "maximum_width_m": 0.0002024507935383668,
+    "final_height_m": 4.300883439051911e-05
   }
 }

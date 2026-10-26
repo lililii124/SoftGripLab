@@ -1,5 +1,5 @@
 {
-  "trajectory_sha256": "12e4e16a8cfe3317f8381e859d1c336fd14d17b574d48a07d7ce2577bc5305c0",
+  "trajectory_sha256": "3f5e4b517ea2f5f7855cb2d9b5895a3b074f9fe90f960d3d08c07933736d4966",
   "geometry": "saved solver nodes and boundary triangles; no smoothing or shape interpolation",
   "renderer": "PyBullet TinyRenderer, depth buffer",
   "deformation_scale": 1.0,

@@ -36,10 +36,10 @@ def run_fem(
     output,
     *,
     scene="compression",
-    cells=7,
+    cells=12,
     young_pa=15000.0,
     friction=0.7,
-    timestep_s=0.001,
+    timestep_s=0.0005,
     frames=91,
     render=True,
 ):

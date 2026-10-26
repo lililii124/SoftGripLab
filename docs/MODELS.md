@@ -78,7 +78,7 @@ at frames and is labeled accordingly.
 Bullet's deformable world integrates a compressible Neo-Hookean solid on a
 structured tetrahedral mesh. Young's modulus is 15 kPa, Poisson ratio 0.35,
 density 1000 kg/m³ and block dimensions 50 × 50 × 40 mm. The default mesh has
-448 nodes and 1,764 positive-volume tetrahedra. Lamé constants are passed to the
+2,028 nodes and 9,504 positive-volume tetrahedra. Lamé constants are passed to the
 upstream solver. The numerical damping setting is 0.03 and contact margin 0.3 mm.
 
 Compression prescribes a finite upper platen's displacement and then unloads it.
