@@ -40,6 +40,17 @@
 摩擦系数置零后无法提起物体。该机器人场景与前面的软体夹持场景分别求解，
 目前没有把刚性方块包装成可变形物体。
 
+## 5 · 黏附抓取可变形物体
+
+![Panda 黏附承重、搬运和释放，近景回放实际材料网格](docs/assets/05_adhesive_robot.gif)
+
+Panda 先压触 **27 g 的软块**，再开启黏附、抬升、横向搬运 80 mm，落台后关闭黏附。
+机械臂实际末端位置驱动 MPM 接触计算，材料反力在下一耦合步反馈给机械臂。
+软块承受重力，没有固定节点或物体绑定关节。关闭黏附的对照留在原位。
+
+右侧近景直接回放保存的材料网格与机械臂关节，变形倍率为 1。
+[模型、验证与回放数据](docs/ADHESIVE_ROBOT.md)。
+
 ## 运行
 
 Python 3.11+，CPU 即可：
@@ -60,6 +71,8 @@ python -m pip install '.[mpm,robot]'
 python -m softgriplab mpm-adhesion --output outputs/continuum_adhesion
 python -m softgriplab mpm-adhesion --work 0 --output outputs/continuum_nonadhesive
 python -m softgriplab animate-adhesion
+python -m softgriplab adhesive-robot --output outputs/adhesive_robot
+python -m softgriplab adhesive-robot --work 0 --no-render --output outputs/adhesive_robot_control
 ```
 
 求解与渲染可以放在不同环境中。`animate-adhesion` 读取 NPZ 数据，只需要 PyBullet，
@@ -87,7 +100,7 @@ python -m softgriplab identify fast.csv slow.csv \
 Hertz/JKR 参考接触历史可用 `adhesion` 输出为 CSV。
 
 目前的工作重点是模型接入、接触检查、对照算例和可复现数据。完整空间收敛、
-试验标定、黏弹性材料向抓取模型的传递，以及机械臂与软体的统一仿真仍需继续完善。
+试验标定、黏弹性材料向抓取模型的传递仍需继续完善。场景 5 已实现机械臂与弹性软体的分区耦合。
 目前没有真实机器人实验或损伤预测验证。[后续安排](docs/ROADMAP.md)。
 
 [GPL-3.0](LICENSE) · [第三方说明](NOTICE)。

@@ -119,6 +119,16 @@ controllers and contact discretizations; they are not a coupled soft-robot model
 The reduced `SuctionSpec` capacity utility remains available for unit calculations,
 but it is no longer used to animate a robot attachment.
 
+## Adhesive Panda with a deformable payload
+
+Scene 5 couples motor-driven Panda dynamics to an unanchored Neo-Hookean MPM
+block. The measured sphere center drives upstream Dugdale contact on the actual
+top material layer. Its interval-averaged reaction loads the next robot step.
+Gravity acts throughout; switching adhesion off after landing releases the
+object. A compression-contact gate prevents engagement before pressing.
+Parameters, controls, time-step comparison and limitations are recorded in
+[the coupled scene description](ADHESIVE_ROBOT.md).
+
 ## References
 
 - [SciPy lsim](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.lsim.html)

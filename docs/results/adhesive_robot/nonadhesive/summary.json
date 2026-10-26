@@ -1,0 +1,46 @@
+{
+  "backend": "partitioned PyBullet Panda + JAX-MPM",
+  "work_j_m2": 0.0,
+  "young_pa": 12000.0,
+  "poisson": 0.3,
+  "grid": 32,
+  "particles": 4096,
+  "mass_kg": 0.027,
+  "weight_n": 0.26487,
+  "coupling_dt_s": 0.008333333333333333,
+  "mpm_dt_s": 4.930966469428008e-05,
+  "mpm_substeps_per_robot_step": 169,
+  "interaction_range_m": 0.0008,
+  "max_penetration_m": 8.841768901099445e-05,
+  "max_penalty_step_number": 0.06224494162591568,
+  "payload_anchors": 0,
+  "payload_attachment_constraints": 0,
+  "reaction_feedback": true,
+  "first_compressive_contact_s": 1.1666666666666667,
+  "max_com_height_m": 0.04499999999999919,
+  "final_com_m": [
+    0.060000420284851017,
+    0.05000004931605148,
+    0.044672994270705695
+  ],
+  "pick_place_success": false,
+  "mean_airborne_support_n": -0.0,
+  "airborne_fraction": 0.0,
+  "airborne_active_contact_fraction": 0.0,
+  "airborne_momentum_balance_residual_n_s": null,
+  "final_contact_force_n": 0.0,
+  "max_tracking_error_m": 0.005553759193690717,
+  "min_det_f": 0.954572042345236,
+  "loaded_source_sha256": {
+    "core.py": "4a3895ffe15ab28dd0981e94bb0be5f2030b12714f02feae5e917c706e6b71ae",
+    "adhesion.py": "12cda0bc77b95a8740245050bc2ae86b78018bd2642329efff3920cb8d9f9042",
+    "boundaries.py": "946589362a8d45862690aebfb2887b8f112b4438fc039f5c370d3a968f65d5d0"
+  },
+  "limitations": [
+    "Ideal switchable dry adhesion strength; no vacuum, electrostatic field or leakage model.",
+    "Spherical head acts on the original top material sampling layer only.",
+    "One coupling interval reaction lag; grid-based floor contact has spatial error.",
+    "Robot meshes outside the adhesive head do not collide with MPM particles.",
+    "Elastic uncalibrated material; no fracture or damage in this scene."
+  ]
+}

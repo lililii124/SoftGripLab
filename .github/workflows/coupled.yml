@@ -1,0 +1,17 @@
+name: Coupled adhesive rollout
+on:
+  workflow_dispatch:
+jobs:
+  coupled:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      JAX_PLATFORMS: cpu
+      SOFTGRIPLAB_FULL_COUPLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[mpm,robot,test]'
+      - run: python -m pytest tests/test_adhesive_robot.py -q

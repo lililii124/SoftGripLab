@@ -45,6 +45,19 @@ distances. There is no payload attachment joint or disabled finger collision.
 A frictionless control fails to lift the cube. This articulated robot example
 is separate from the deformable fixture example above.
 
+## 5 · Carry a deformable object by adhesion
+
+![Panda adhesive grasp with the actual deformable material surface](docs/assets/05_adhesive_robot.gif)
+
+The Panda presses a spherical adhesive head onto a **27 g deformable block**,
+lifts it, carries it 80 mm and switches adhesion off after setting it down.
+Measured robot motion drives the MPM contact calculation; the material reaction
+loads the arm on the next coupling step. The object has gravity and no anchors
+or attachment joints. A zero-adhesion control remains on the table.
+
+The close-up replays the saved material mesh and measured robot joints at 1:1
+deformation scale. [Model, checks and replay data](docs/ADHESIVE_ROBOT.md).
+
 ## Run the scenes
 
 Python 3.11+, CPU only:
@@ -65,6 +78,8 @@ python -m pip install '.[mpm,robot]'
 python -m softgriplab mpm-adhesion --output outputs/continuum_adhesion
 python -m softgriplab mpm-adhesion --work 0 --output outputs/continuum_nonadhesive
 python -m softgriplab animate-adhesion
+python -m softgriplab adhesive-robot --output outputs/adhesive_robot
+python -m softgriplab adhesive-robot --work 0 --no-render --output outputs/adhesive_robot_control
 ```
 
 You can run the solver and renderer in separate environments: `animate-adhesion`
@@ -110,8 +125,8 @@ reference histories remain available as CSV through `adhesion`.
 
 The contribution is the benchmark setup, solver adapters, observable contact
 checks and reproducible comparison workflow. It does not implement a new physics
-engine. Spatial convergence, experimental calibration and a coupled deformable
-Panda grasp remain open work. The robot cube is rigid; the FEM specimens are
-elastic; neither inherits the fitted SLS relaxation law. [Roadmap](docs/ROADMAP.md).
+engine. Spatial convergence, experimental calibration and transfer of the fitted
+SLS law into the continuum scenes remain open work. Scene 4 uses a rigid cube;
+scene 5 couples the Panda to an elastic MPM object. [Roadmap](docs/ROADMAP.md).
 
 [GPL-3.0](LICENSE) · [Third-party attribution](NOTICE).

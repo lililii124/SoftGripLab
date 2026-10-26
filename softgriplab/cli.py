@@ -100,6 +100,20 @@ def main(argv=None):
     robot.add_argument("--finger-force-n", type=float, default=4.0)
     robot.add_argument("--no-render", action="store_true")
     robot.add_argument("--fps", type=int, default=15)
+    coupled = commands.add_parser(
+        "adhesive-robot", help="Panda and deformable payload coupled by adhesive forces"
+    )
+    coupled.add_argument("--output", type=Path, default=Path("outputs/adhesive_robot"))
+    coupled.add_argument("--work", type=float, default=6.0)
+    coupled.add_argument("--grid", type=int, default=32)
+    coupled.add_argument("--dt-factor", type=float, default=1.0)
+    coupled.add_argument("--coupling-dt", type=float, default=1 / 120)
+    coupled.add_argument("--fps", type=int, default=15)
+    coupled.add_argument("--no-render", action="store_true")
+    replay = commands.add_parser(
+        "animate-adhesive-robot", help="Replay coupled robot and material states"
+    )
+    replay.add_argument("--source", type=Path, default=Path("outputs/adhesive_robot"))
     args = parser.parse_args(argv)
     try:
         if args.command == "demo":
@@ -188,6 +202,28 @@ def main(argv=None):
             from .backends.adhesive import run_adhesion
 
             print(json.dumps(run_adhesion(args.output, frames=args.frames), indent=2))
+        elif args.command == "animate-adhesive-robot":
+            from .advanced_render import render_adhesive_robot
+
+            render_adhesive_robot(args.source)
+            print(args.source / "adhesive_robot.gif")
+        elif args.command == "adhesive-robot":
+            from .backends.adhesive_robot import run_adhesive_robot
+
+            print(
+                json.dumps(
+                    run_adhesive_robot(
+                        args.output,
+                        work_j_m2=args.work,
+                        grid=args.grid,
+                        dt_factor=args.dt_factor,
+                        coupling_dt=args.coupling_dt,
+                        fps=args.fps,
+                        render=not args.no_render,
+                    ),
+                    indent=2,
+                )
+            )
         elif args.command == "robot-demo":
             from .backends.robot import run_robot
 

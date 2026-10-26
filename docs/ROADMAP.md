@@ -17,6 +17,13 @@
 - [x] Zero-friction / zero-adhesion controls and replayable surface data.
 - [x] Neutral engineering colors; synthetic geometry removed from the main gallery.
 
+## v0.4 — adhesive robot and deformable payload
+
+- [x] Couple measured Panda tool motion to MPM surface tractions and return reaction forces.
+- [x] Press, engage, lift, transfer, set down and release an unanchored 27 g block.
+- [x] Zero-adhesion control, airborne momentum balance and coupling-step comparison.
+- [x] Actual joint/mesh replay with tool-center consistency check.
+
 ## Next — one material model across identification and grasping
 
 - [ ] Reuse a supported upstream viscoelastic law or contribute it upstream;

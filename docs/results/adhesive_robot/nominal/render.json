@@ -1,0 +1,9 @@
+{
+  "trajectory_sha256": "0662eb0070ab0d4b0b1a87c901a463a5fd45ef63ff5f462d7596ca91dff1b872",
+  "deformation_scale": 1.0,
+  "geometry": "saved material surface nodes and measured Panda joints",
+  "max_replayed_tool_center_error_m": 0.0,
+  "frames": 91,
+  "renderer": "PyBullet TinyRenderer",
+  "surface_replay_sha256": "2ff79b80c9edd5f1e05df900304e853cffee32e5d38c7fce2544c70309be4f04"
+}
