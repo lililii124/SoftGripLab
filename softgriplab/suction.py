@@ -55,4 +55,3 @@ class SuctionSpec:
             raise ValueError("constraint reaction must contain three forces and three moments")
         return bool(np.linalg.norm(reaction[:3]) > self.force_capacity_n
                     or np.linalg.norm(reaction[3:]) > self.moment_capacity_nm)
-

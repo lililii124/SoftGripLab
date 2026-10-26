@@ -62,4 +62,3 @@ def run_adhesion(output, *, frames=151):
     from ..animations import render_adhesion
     render_adhesion(data, output / "adhesion.gif")
     return report
-

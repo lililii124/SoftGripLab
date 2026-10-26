@@ -24,4 +24,3 @@ def test_zero_adhesion_recovers_hertz_force_and_radius():
     data = contact_cycle(work_j_m2=0)
     np.testing.assert_allclose(data["jkr_radius_m"], data["hertz_radius_m"], atol=1e-14)
     np.testing.assert_allclose(data["jkr_force_n"], data["hertz_force_n"], atol=1e-14)
-

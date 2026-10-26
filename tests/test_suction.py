@@ -30,4 +30,3 @@ def test_seal_can_hold_static_payload_but_opens_under_large_force_or_moment():
     assert spec.overloaded([0, 0, 0, 2 * spec.moment_capacity_nm, 0, 0])
     with pytest.raises(ValueError):
         spec.overloaded(np.full(6, np.nan))
-

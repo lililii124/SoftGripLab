@@ -22,4 +22,3 @@ def test_motor_driven_pick_place_and_weak_suction_control(tmp_path):
     np.testing.assert_allclose(weak["final_payload_position_m"][:2], [.5, -.18], atol=.005)
     trajectory = np.genfromtxt(tmp_path / "nominal/trajectory.csv", delimiter=",", names=True)
     assert np.max(trajectory["tcp_tracking_error_m"]) < .02
-
