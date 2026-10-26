@@ -14,6 +14,7 @@ dependencies = ["numpy>=1.26", "scipy>=1.11", "matplotlib>=3.8", "pillow>=10"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+shape = ["scikit-fem==12.0.2", "scipy>=1.15", "pybullet==3.2.7"]
 robot = ["pybullet==3.2.7"]
 cutting = ["pybullet==3.2.7", "pyopencl>=2024.1", "scikit-image>=0.22"]
 mpm = ["jax-mpm @ git+https://github.com/lililii124/jax-mpm.git@fd8ed2caa40a50d01992420660f68ae6ce0d084f"]

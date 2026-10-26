@@ -1,0 +1,11 @@
+{
+  "trajectory": "dense_validation.npz",
+  "trajectory_sha256": "878ff7e119b92ac9a8091517d324f0466aa397e39929b17e05c730fe74a44ad7",
+  "geometry": "saved dense FEM equilibrium nodes and boundary triangles",
+  "deformation_scale": 1.0,
+  "text_overlays": false,
+  "frames": 43,
+  "force_component": "recorded tool axial reaction",
+  "renderer": "PyBullet TinyRenderer",
+  "time_interpretation": "quasistatic loading schedule, not transient dynamics"
+}

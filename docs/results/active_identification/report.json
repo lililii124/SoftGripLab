@@ -1,0 +1,256 @@
+{
+  "model": "Axial lumped-mass SLS + reversible triangular adhesive potential",
+  "seed": 7,
+  "hypotheses": 512,
+  "trials": 12,
+  "rounds": 2,
+  "spec": {
+    "geometry": {
+      "thickness_m": 0.02,
+      "area_m2": 0.0002
+    },
+    "top_mass_kg": 0.0005,
+    "bottom_mass_kg": 0.0095,
+    "peak_gap_m": 0.0005,
+    "cutoff_m": 0.002,
+    "compression_stiffness_n_m": 20000.0,
+    "gravity_m_s2": 9.81
+  },
+  "dt_s": 0.0001,
+  "parameter_columns": [
+    "equilibrium_pa",
+    "branch_pa",
+    "relaxation_s",
+    "work_j_m2"
+  ],
+  "log_uniform_parameter_bounds": [
+    [
+      12000.0,
+      65000.0
+    ],
+    [
+      8000.0,
+      85000.0
+    ],
+    [
+      0.02,
+      0.5
+    ],
+    [
+      0.8,
+      3.2
+    ]
+  ],
+  "observation_noise_std": {
+    "force_n": 0.008,
+    "marker_m": 3e-05
+  },
+  "calibration": {
+    "name": "initial",
+    "amplitude_m": 0.00012,
+    "ramp_s": 0.04,
+    "duration_s": 0.06
+  },
+  "probes": [
+    {
+      "name": "small_fast",
+      "amplitude_m": 0.00035,
+      "ramp_s": 0.025,
+      "duration_s": 0.36
+    },
+    {
+      "name": "small_slow",
+      "amplitude_m": 0.00035,
+      "ramp_s": 0.24,
+      "duration_s": 0.36
+    },
+    {
+      "name": "medium_fast",
+      "amplitude_m": 0.0009,
+      "ramp_s": 0.025,
+      "duration_s": 0.36
+    },
+    {
+      "name": "medium_slow",
+      "amplitude_m": 0.0009,
+      "ramp_s": 0.24,
+      "duration_s": 0.36
+    },
+    {
+      "name": "large_fast",
+      "amplitude_m": 0.0016,
+      "ramp_s": 0.025,
+      "duration_s": 0.36
+    },
+    {
+      "name": "large_slow",
+      "amplitude_m": 0.0016,
+      "ramp_s": 0.24,
+      "duration_s": 0.36
+    },
+    {
+      "name": "pull_off_fast",
+      "amplitude_m": 0.0028,
+      "ramp_s": 0.025,
+      "duration_s": 0.36
+    },
+    {
+      "name": "pull_off_slow",
+      "amplitude_m": 0.0028,
+      "ramp_s": 0.24,
+      "duration_s": 0.36
+    }
+  ],
+  "release_acceleration_m_s2": [
+    4.0,
+    10.0,
+    16.0,
+    22.0,
+    28.0,
+    34.0,
+    40.0,
+    46.0,
+    52.0,
+    58.0,
+    64.0,
+    70.0,
+    76.0,
+    82.0,
+    88.0,
+    94.0,
+    100.0
+  ],
+  "release_definition": "gap >= cutoff at every observation in the final 20 ms",
+  "policies": {
+    "task": {
+      "initial_brier_mean": 0.026626457887232252,
+      "final_brier_mean": 0.014705882399681305,
+      "paired_brier_change_mean": -0.011920575487550945,
+      "paired_brier_change_standard_error": 0.011019128567046219,
+      "final_accuracy_mean": 0.9852941176470589,
+      "median_effective_hypotheses": 1.0,
+      "degenerate_trial_fraction": 1.0
+    },
+    "information": {
+      "initial_brier_mean": 0.026626457887232252,
+      "final_brier_mean": 0.01470671194453624,
+      "paired_brier_change_mean": -0.011919745942696012,
+      "paired_brier_change_standard_error": 0.0110188743113403,
+      "final_accuracy_mean": 0.9852941176470589,
+      "median_effective_hypotheses": 1.0,
+      "degenerate_trial_fraction": 1.0
+    },
+    "fixed": {
+      "initial_brier_mean": 0.026626457887232252,
+      "final_brier_mean": 0.014705879720226496,
+      "paired_brier_change_mean": -0.011920578167005752,
+      "paired_brier_change_standard_error": 0.01029448617795675,
+      "final_accuracy_mean": 0.9852941176470589,
+      "median_effective_hypotheses": 1.0,
+      "degenerate_trial_fraction": 1.0
+    },
+    "random": {
+      "initial_brier_mean": 0.026626457887232252,
+      "final_brier_mean": 0.009732872085339494,
+      "paired_brier_change_mean": -0.016893585801892756,
+      "paired_brier_change_standard_error": 0.010460869584337128,
+      "final_accuracy_mean": 0.9901960784313726,
+      "median_effective_hypotheses": 1.0000000005648815,
+      "degenerate_trial_fraction": 1.0
+    }
+  },
+  "ambiguity_pair": {
+    "indices": [
+      331,
+      231
+    ],
+    "calibration_whitened_rmse": [
+      1.1250953913120663,
+      1.0749984378151862
+    ],
+    "pair_whitened_rms_distance": 0.2251259150074294,
+    "both_fit_within_1_3_sigma_rms": true,
+    "task_disagreement_fraction": 0.23529411764705882,
+    "selection": "largest task disagreement among plausible pairs within 0.25 noise-scaled RMS; closest-pair fallback",
+    "acceleration_m_s2": 34.0,
+    "parameters": [
+      [
+        54693.5643489606,
+        15266.649976558883,
+        0.1195059525458938,
+        1.8343107057395232
+      ],
+      [
+        39781.50650255061,
+        13054.998083051076,
+        0.1188413168322452,
+        3.163895519407823
+      ]
+    ],
+    "release_detached": [
+      true,
+      false
+    ],
+    "prediction_disagreement_verified_at_half_dt": true
+  },
+  "integration_checks": [
+    {
+      "protocol": {
+        "name": "initial",
+        "amplitude_m": 0.00012,
+        "ramp_s": 0.04,
+        "duration_s": 0.06
+      },
+      "rk4_half_dt_force_max_error_n": 6.6727414427258935e-09,
+      "rk4_radau_force_max_error_n": 7.127478288126987e-09,
+      "rk4_radau_position_max_error_m": 7.399720295059656e-12,
+      "detachment_agrees": true
+    },
+    {
+      "protocol": {
+        "name": "pull_off_slow",
+        "amplitude_m": 0.0028,
+        "ramp_s": 0.24,
+        "duration_s": 0.36
+      },
+      "rk4_half_dt_force_max_error_n": 9.377433466961627e-07,
+      "rk4_radau_force_max_error_n": 7.126848991234613e-07,
+      "rk4_radau_position_max_error_m": 1.1058614532468412e-08,
+      "detachment_agrees": true
+    },
+    {
+      "protocol": {
+        "acceleration_m_s2": 52.0,
+        "pulse_s": 0.06,
+        "duration_s": 0.18
+      },
+      "rk4_half_dt_force_max_error_n": 4.282179739436426e-06,
+      "rk4_radau_force_max_error_n": 3.5228705569587127e-06,
+      "rk4_radau_position_max_error_m": 2.6327305627238395e-07,
+      "detachment_agrees": true
+    }
+  ],
+  "task_minus_fixed_brier": {
+    "paired_mean": 2.6794548079143534e-09,
+    "paired_standard_error": 0.007240673961052451,
+    "interpretation": "negative favors task; a pilot, not a significance claim"
+  },
+  "first_trial_task_probes": [
+    "large_fast",
+    "small_fast"
+  ],
+  "code_sha256": {
+    "active_contact.py": "126a7bfc1f248223d12b51d839164669dc86e92fc3b810daf1e1680933f86d4c",
+    "active_identification.py": "760bfbf3fa638d4a553a9cdb520749a3ecd0f0610d372ff924817ac947892f21"
+  },
+  "limitations": [
+    "Numerical proof of concept; no experimental or 3D continuum validation.",
+    "Truth is off-grid and uses half the RK4 time step, but shares the inference constitutive law.",
+    "Radau verifies integration only; no independent physics model or model-mismatch validation yet.",
+    "Finite hypothesis posterior can collapse or exclude truth; ESS is reported, intervals are not calibrated.",
+    "Every probe starts on an intact, fully rested specimen; irreversible damage/history between probes is absent.",
+    "Only normal axial motion, known geometry/masses, fixed interface range and force/one marker sensing.",
+    "Equal duration/samples per additional probe; force exposure and damage costs are not constrained.",
+    "Monte Carlo acquisition and a small number of trials do not establish a universal policy advantage."
+  ]
+}

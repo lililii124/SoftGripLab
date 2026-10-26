@@ -49,6 +49,20 @@ python -m pytest -q
 
 ### Material identification
 
+**Complex-shape hyperelasticity and adhesion:**
+[model, inverse method and reproduction](docs/SHAPE_IDENTIFICATION.md).
+
+![3D reference and identified material](docs/results/shape_identification/shape_identification.gif)
+
+Left: reference. Right: identified parameters. Both are solved again on a dense mesh.
+
+**Active contact identification:** probe an unknown adhesive specimen and
+predict release. [Run and inspect the benchmark](docs/ACTIVE_IDENTIFICATION.md).
+
+![Two plausible materials, different release predictions](docs/results/active_identification/ambiguity_release.gif)
+
+Axial reference model; synthetic observations. Policy comparisons are reported without assuming an active-policy advantage.
+
 Fit relaxation parameters from force–displacement histories with SciPy:
 
 ```bash

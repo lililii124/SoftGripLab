@@ -1,0 +1,12 @@
+name: Hyperelastic adhesive identification
+on: [push, pull_request]
+jobs:
+  shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install '.[shape,test]'
+      - run: python -m pytest -q tests/test_complex_contact.py tests/test_shape_identification.py

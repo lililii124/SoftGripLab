@@ -4,6 +4,11 @@ Copyright (c) 2026 SoftGripLab contributors
 This project uses external tools without vendoring their implementations:
 - NumPy: https://numpy.org/ (BSD-3-Clause)
 - SciPy: https://scipy.org/ (BSD-3-Clause)
+- scikit-fem: https://github.com/kinnala/scikit-fem (BSD-3-Clause)
+  Optional tetrahedral basis, quadrature and variational-form assembly for 3D
+  hyperelastic identification. The solver interface follows the total-Lagrangian
+  workflow documented in the upstream hyperelasticity examples. No upstream
+  implementation is vendored. Neo-Hookean elasticity is an established model.
 - Matplotlib: https://matplotlib.org/ (Matplotlib license)
 - pytest: https://pytest.org/ (MIT)
 - JAX: https://github.com/jax-ml/jax (Apache-2.0)

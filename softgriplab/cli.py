@@ -15,6 +15,29 @@ def main(argv=None):
     )
     demo.add_argument("--output", type=Path, default=Path("outputs/demo"))
     demo.add_argument("--seed", type=int, default=7)
+    active = commands.add_parser(
+        "active-identification", help="Axial adhesion: ambiguity, active probing and release prediction"
+    )
+    active.add_argument("--output", type=Path, default=Path("outputs/active_identification"))
+    active.add_argument("--hypotheses", type=int, default=512)
+    active.add_argument("--trials", type=int, default=6)
+    active.add_argument("--rounds", type=int, default=2)
+    active.add_argument("--seed", type=int, default=7)
+    active.add_argument("--dt", type=float, default=0.0001)
+    active.add_argument("--no-render", action="store_true")
+    shape = commands.add_parser(
+        "shape-identification", help="3D hyperelastic/adhesion identification on a curved lobed specimen"
+    )
+    shape.add_argument("--output", type=Path, default=Path("outputs/shape_identification"))
+    shape.add_argument("--library", type=Path)
+    shape.add_argument("--library-count", type=int, default=13)
+    shape.add_argument("--materials", type=int, default=6)
+    shape.add_argument("--trials", type=int, default=24)
+    shape.add_argument("--seed", type=int, default=41)
+    shape.add_argument("--no-dense", action="store_true")
+    shape.add_argument("--no-render", action="store_true")
+    shape_replay = commands.add_parser("animate-shape-identification", help="Replay saved 3D identification meshes")
+    shape_replay.add_argument("--source", type=Path, default=Path("outputs/shape_identification"))
     fit = commands.add_parser(
         "identify", help="Fit one or more uniformly sampled compression CSVs"
     )
@@ -151,7 +174,34 @@ def main(argv=None):
     cut_replay.add_argument("--source", type=Path, default=Path("outputs/banana_robot"))
     args = parser.parse_args(argv)
     try:
-        if args.command == "demo":
+        if args.command == "shape-identification":
+            from .shape_identification import run_shape_identification
+
+            if args.materials < 2 or args.trials < 1 or args.library_count < 5:
+                raise ValueError("materials >= 2, trials >= 1, library-count >= 5 are required")
+            result = run_shape_identification(
+                args.output, library_count=args.library_count, trials=args.trials,
+                seed=args.seed, render=not args.no_render, library_path=args.library,
+                validation_materials=args.materials, dense=not args.no_dense
+            )
+            print(json.dumps({"output": str(args.output), "summary": result["summary"],
+                              "dense_validation": result["dense_validation"]}, indent=2))
+        elif args.command == "animate-shape-identification":
+            from .shape_render import render_shape_identification
+
+            render_shape_identification(args.source)
+            print(args.source/"shape_identification.gif")
+        elif args.command == "active-identification":
+            from .active_identification import run_active_identification
+
+            report = run_active_identification(
+                args.output, hypotheses=args.hypotheses, trials=args.trials,
+                rounds=args.rounds, seed=args.seed, dt=args.dt, render=not args.no_render
+            )
+            print(json.dumps({"output": str(args.output), "policies": report["policies"],
+                              "ambiguity_pair": report["ambiguity_pair"],
+                              "integration_checks": report["integration_checks"]}, indent=2))
+        elif args.command == "demo":
             from .demo import run_demo
 
             result = run_demo(args.output, args.seed)

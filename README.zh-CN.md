@@ -49,6 +49,18 @@ python -m pytest -q
 
 ### 材料参数辨识
 
+[复杂形貌：超弹性与黏附联合辨识](docs/SHAPE_IDENTIFICATION.md)。
+
+![三维真值与辨识参数对照](docs/results/shape_identification/shape_identification.gif)
+
+左：参考材料；右：辨识参数。两侧均由细网格重新求解。
+
+[主动力学辨识](docs/ACTIVE_IDENTIFICATION.md)：接触探测、参数歧义与上提脱粘预测。
+
+![两组可解释初始观测的参数，对释放给出不同预测](docs/results/active_identification/ambiguity_release.gif)
+
+轴向简化模型，使用合成观测。对照结果如实记录。
+
 用 SciPy 从力—位移历史中辨识松弛参数：
 
 ```bash

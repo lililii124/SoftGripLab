@@ -1,0 +1,133 @@
+{
+  "model": "3D compressible Neo-Hookean + finite-range reversible surface adhesion",
+  "backend": "scikit-fem + SciPy sparse Newton with energy line search",
+  "poisson_known": 0.35,
+  "length_scale_m": 0.01,
+  "seed": 41,
+  "independent_materials": 6,
+  "paired_noise_repeats_per_material": 24,
+  "truth_parameters": [
+    [
+      11734.452299920587,
+      4.148406299853164
+    ],
+    [
+      6369.517392440311,
+      2.039549263915249
+    ],
+    [
+      5523.405423287922,
+      0.7031034387858879
+    ],
+    [
+      14255.38955372165,
+      3.6984868940804647
+    ],
+    [
+      13993.658626797278,
+      2.682882865809373
+    ],
+    [
+      13819.262652279602,
+      1.1132828960337886
+    ]
+  ],
+  "noise": {
+    "force_n": 0.004,
+    "surface_m": 2.5e-05
+  },
+  "summary": {
+    "profile_force_only": {
+      "mean_mu_relative_error": 0.015740410380204992,
+      "mean_work_relative_error": 0.0334386625521888,
+      "median_online_seconds": 0.002115849987603724,
+      "median_forward_evaluations": 397.0,
+      "mean_whitened_fit_rmse": 2.6249193569426663
+    },
+    "joint_force_only": {
+      "mean_mu_relative_error": 0.016241651822525308,
+      "mean_work_relative_error": 0.033050534746625594,
+      "median_online_seconds": 0.009977750014513731,
+      "median_forward_evaluations": 107.5,
+      "mean_whitened_fit_rmse": 2.6250907081516037
+    },
+    "discrete_force_only": {
+      "mean_mu_relative_error": 0.0666911358795616,
+      "mean_work_relative_error": 0.07898800660357991,
+      "median_online_seconds": 0.0017587000038474798,
+      "median_forward_evaluations": 261.0,
+      "mean_whitened_fit_rmse": 3.1417182602114955
+    },
+    "scalar_profile_force_only": {
+      "mean_mu_relative_error": 0.015740127773698154,
+      "mean_work_relative_error": 0.03343886838189829,
+      "median_online_seconds": 0.006980250007472932,
+      "median_forward_evaluations": 254.0,
+      "mean_whitened_fit_rmse": 2.624919357254923
+    },
+    "profile_force_surface": {
+      "mean_mu_relative_error": 0.02546587444820999,
+      "mean_work_relative_error": 0.037711650699549244,
+      "median_online_seconds": 0.007390499988105148,
+      "median_forward_evaluations": 409.0,
+      "mean_whitened_fit_rmse": 2.9662278960241335
+    },
+    "joint_force_surface": {
+      "mean_mu_relative_error": 0.025715224281040675,
+      "mean_work_relative_error": 0.037762195670331816,
+      "median_online_seconds": 0.014505450002616271,
+      "median_forward_evaluations": 125.5,
+      "mean_whitened_fit_rmse": 2.9662284670273866
+    }
+  },
+  "elapsed_seconds_before_render_this_run": 6.584643699985463,
+  "library_generation_run_seconds": 379.3261044998653,
+  "library_ratio_samples": 13,
+  "library_probe_cycles": 39,
+  "performance": {
+    "online_speedup_over_multistart_same_force_data": 4.715717122183077,
+    "online_speedup_over_scalar_profile": 3.2990287819876665,
+    "maximum_objective_excess_over_scalar_profile": -8.668621376273222e-13,
+    "maximum_objective_excess_over_multistart": -8.114398042380344e-12,
+    "scope": "Paired online inverse timings using the same precomputed FEM library and observations; offline construction excluded."
+  },
+  "learning_regime": "No neural network or large training set: 13 mechanics-ratio samples at three probe sites; noise repeats are validation only.",
+  "validation_material_seed": 271828,
+  "dense_validation": {
+    "checks": [
+      {
+        "case": "truth",
+        "min_det_f": 0.8092741741609513,
+        "maximum_equilibrium_residual": 1.9838933366968237e-06
+      },
+      {
+        "case": "identified",
+        "min_det_f": 0.8302515759746393,
+        "maximum_equilibrium_residual": 1.9636877377396756e-06
+      }
+    ],
+    "nodes": 1701,
+    "tetrahedra": 7680,
+    "inference_method": "scalar_profile_force_only",
+    "states_reused": true,
+    "force_relative_l2_error": 0.30602241586566276,
+    "mean_absolute_force_error_n": 0.0024647802659106574,
+    "pull_off_peak_relative_error": 0.007503599885931855,
+    "position_rmse_m": 0.00014093761831795093
+  },
+  "library_sha256": "bd0a8ed4a6c2bbd2e475fd2fce0e59aa677eff41a0f7d9ea7cd5121e06ecd69f",
+  "library_reused": "outputs\\shape_development\\library\\library.npz",
+  "source_sha256": {
+    "complex_contact.py": "8414e83cbd097347c435a3c4f4e94a26a5e6f4b2b64e8a8e82ceb65c58485c70",
+    "shape_identification.py": "8e1894166ea4883417e70a0687cff708e12635550f8f8d0e0f1da4142f6c34d4"
+  },
+  "limitations": [
+    "Known complex geometry, known fixtures and Poisson ratio; only mu and W are inferred.",
+    "Gravity-free quasi-static load path; no dynamics, rate effects, friction or irreversible damage.",
+    "Identification truth uses direct off-grid FEM on the inference mesh. Dense transfer is checked for one material only.",
+    "Lumped reference-surface integration; contact and mesh convergence still require study.",
+    "Noise repeats do not count as independent material or geometry tests.",
+    "Online timing excludes offline library construction and direct FEM validation; a reused library is explicitly named.",
+    "The current benchmark compares inverse methods; it does not establish active-location selection superiority."
+  ]
+}

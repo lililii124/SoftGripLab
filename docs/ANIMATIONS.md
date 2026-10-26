@@ -13,6 +13,7 @@ captures the actual PyBullet state, with a simultaneous finger close-up.
 | Panda | PyBullet articulated rigid dynamics; finger collision and friction | Joint states, payload pose and measured contacts |
 | Adhesive transport | Panda + JAX-MPM; dry adhesion | Material surface and measured head motion |
 | Continuous cutting | Panda + PeriPy; moving blade and dynamic bonds | Material points, connectivity and measured knife pose |
+| Complex-shape identification | scikit-fem Neo-Hookean FEM + finite-range adhesion | Independently solved reference/identified meshes and tool reaction |
 
 ## Generate the gallery
 
@@ -100,6 +101,14 @@ enabled and there is no payload attachment constraint. A 0-friction control
 must fail to lift. The robot object is rigid and is separate from the FEM model.
 
 ## Earlier command changes
+
+The complex-shape identification replay uses no robot pose or deformation
+interpolation. [Model, comparisons and limitations](SHAPE_IDENTIFICATION.md).
+
+```bash
+python -m pip install '.[shape]'
+python -m softgriplab animate-shape-identification --source docs/results/shape_identification
+```
 
 `robot-demo --pressure-pa` was replaced by `--friction` and `--finger-force-n`.
 The earlier suction-joint demonstration and schematic deformation animations
