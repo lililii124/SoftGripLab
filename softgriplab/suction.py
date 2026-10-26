@@ -1,6 +1,6 @@
 """Independent conservative suction-capacity and seal-geometry calculations.
 
-This is a seal-gated breakable joint, not a fluid or deformable-cup solver.
+These algebraic checks do not create a joint or solve fluid/cup deformation.
 """
 
 from dataclasses import dataclass
