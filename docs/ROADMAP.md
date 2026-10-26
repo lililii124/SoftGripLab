@@ -8,7 +8,14 @@
 - [x] Existing MPM backend integration, planar jaws and base acceleration.
 - [x] Analytic and inference tests; optional continuum momentum check.
 
-## v0.2 — one material model across identification and grasping
+## v0.2 — progressive animations and contact demonstrations (implemented)
+
+- [x] Data-driven compression animation and side-by-side MPM trajectories.
+- [x] Upstream Hertz/JKR approach, tensile hold and pull-off cycle.
+- [x] Existing Panda robot with PyBullet motors, contact-gated suction and a weak-pressure control.
+- [x] Full-scene and tool close-up cameras; numerical traces retained as supporting evidence.
+
+## Next — one material model across identification and grasping
 
 - [ ] Reuse a supported upstream viscoelastic law or contribute it upstream;
       do not fork a complete material/particle solver into this project.
@@ -20,7 +27,7 @@
 
 ## v0.3 — finite fingers and protective pads
 
-- [ ] Use an existing robotics engine/controller interface for finite gripper motion.
+- [ ] Extend the existing PyBullet Panda demo to deformable pads and finite contact.
 - [ ] Reuse existing deformable contact for finger pads and localized impactors.
 - [ ] Measure slip trajectory, peak contact force, energy dissipation and recovery.
 - [ ] Calibrate rate effects using multiple loading rates before impact predictions.

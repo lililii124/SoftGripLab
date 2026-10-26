@@ -1,0 +1,15 @@
+{
+  "radius_m": 0.01,
+  "reduced_modulus_pa": 100000.0,
+  "work_j_m2": 0.08,
+  "displacement_detachment_m": -2.986903349220507e-05,
+  "critical_contact_radius_m": 0.0003155367569301822,
+  "load_control_pull_off_n": -0.003769911184307752,
+  "backend": "mpm_jax.contact_laws.jkr_history; displacement-controlled stable branch",
+  "frames": 151,
+  "tensile_attachment_samples": 28,
+  "minimum_force_n": -0.0037690503107500246,
+  "detached_at_end": true,
+  "geometry_display": "schematic local contact section; not a resolved displacement field",
+  "mechanism": "dry surface adhesion; not vacuum suction"
+}

@@ -9,9 +9,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install '.[mpm]'
+      - run: python -m pip install '.[mpm,test]'
+      - run: python -m pytest -q tests/test_adhesion.py tests/test_mpm.py
+      - run: python -m softgriplab adhesion --output outputs/adhesion
       - run: python -m softgriplab mpm-grasp --grid 16 --frames 8 --output outputs/mpm
       - uses: actions/upload-artifact@v4
         with:
           name: mpm-smoke
-          path: outputs/mpm/
+          path: |
+            outputs/mpm/
+            outputs/adhesion/

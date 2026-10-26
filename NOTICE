@@ -7,6 +7,11 @@ This project uses external tools without vendoring their implementations:
 - Matplotlib: https://matplotlib.org/ (Matplotlib license)
 - pytest: https://pytest.org/ (MIT)
 - JAX: https://github.com/jax-ml/jax (Apache-2.0)
+- PyBullet / Bullet: https://github.com/bulletphysics/bullet3 (zlib)
+- Panda robot asset supplied by pybullet_data/franka_panda (Apache-2.0).
+  Original asset: bulletphysics/bullet3/examples/pybullet/gym/pybullet_data/franka_panda.
+  The asset is loaded from the dependency, not vendored. Rendered robot frames
+  show this upstream asset; its license is preserved in docs/licenses/FRANKA_PANDA.txt.
 - JAX-MPM: https://github.com/lililii124/jax-mpm (GPL-3.0)
   Optional integration reference: fd8ed2caa40a50d01992420660f68ae6ce0d084f.
   The upstream solver itself preserves its own Taichi and other notices.

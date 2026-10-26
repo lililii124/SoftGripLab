@@ -73,6 +73,20 @@ indicator. `validate_state` runs at every saved frame; upstream state validity
 accumulates every integration step. The exported minimum determinant is sampled
 at frames and is labeled accordingly.
 
+## Adhesion and robot suction
+
+The v0.2 contact gallery delegates Hertz/JKR evaluation and attachment history
+to `mpm_jax.contact_laws`. It uses work of adhesion in J/m² and reduced modulus
+E*, with separate load-controlled force minimum and displacement-controlled
+detachment criteria. The renderer does not solve a surface displacement field.
+
+The robot example uses PyBullet's Panda model and a pressure-capacity-limited
+fixed constraint, acquired only after contact and seal-geometry checks. The
+payload is rigid. Force and moment limits, the one-step trial-constraint
+overshoot, and the distinction from dry adhesion are documented in
+[ANIMATIONS.md](ANIMATIONS.md). These scenes are separate model levels, not a
+coupled material-to-robot solver.
+
 ## References
 
 - [SciPy lsim](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.lsim.html)

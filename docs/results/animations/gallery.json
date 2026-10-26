@@ -1,0 +1,38 @@
+{
+  "01_compression": {
+    "frames": 101,
+    "pixels": [
+      960,
+      600
+    ],
+    "sha256": "7e3de4f1da130ec532e3eea4c595a96379c53839e63652628d89bbd355dad0b3",
+    "bytes": 2584160
+  },
+  "02_adhesion": {
+    "frames": 151,
+    "pixels": [
+      960,
+      600
+    ],
+    "sha256": "6ee2ad98f7d4ad94f7f0207f9e446344c9c01e5673c001bdf0009fd89c80122e",
+    "bytes": 3518684
+  },
+  "03_grasp": {
+    "frames": 41,
+    "pixels": [
+      960,
+      600
+    ],
+    "sha256": "34cac72be73bfa1d4d2540cdc9f7203f3498b93fbde50847b4ff1b5384668090",
+    "bytes": 1066033
+  },
+  "04_robot": {
+    "frames": 136,
+    "pixels": [
+      800,
+      625
+    ],
+    "sha256": "4eb1dbd2e4f132b4c7484a4624a90d91110ece9d83655d2f0c8081d0fdf9a54b",
+    "bytes": 3766003
+  }
+}

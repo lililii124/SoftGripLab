@@ -26,6 +26,21 @@ def main(argv=None):
     mpm.add_argument("--dt-factor", type=float, default=1.0)
     mpm.add_argument("--young-pa", type=float, default=35000)
     mpm.add_argument("--gif", action="store_true")
+    compression = commands.add_parser("animate-compression", help="Animate saved compression records")
+    compression.add_argument("--source", type=Path, default=Path("outputs/demo"))
+    compression.add_argument("--output", type=Path, default=Path("outputs/gallery/01_compression.gif"))
+    grasp = commands.add_parser("animate-grasp", help="Compare actual MPM trajectories as an animation")
+    grasp.add_argument("--source", type=Path, default=Path("outputs/mpm"))
+    grasp.add_argument("--comparison", type=Path, default=Path("outputs/mpm_frictionless"))
+    grasp.add_argument("--output", type=Path, default=Path("outputs/gallery/03_grasp.gif"))
+    adhesion = commands.add_parser("adhesion", help="Animate an upstream Hertz/JKR contact cycle")
+    adhesion.add_argument("--output", type=Path, default=Path("outputs/adhesion"))
+    adhesion.add_argument("--frames", type=int, default=151)
+    robot = commands.add_parser("robot-demo", help="PyBullet Panda suction pick-and-place")
+    robot.add_argument("--output", type=Path, default=Path("outputs/robot"))
+    robot.add_argument("--pressure-pa", type=float, default=30000.)
+    robot.add_argument("--no-render", action="store_true")
+    robot.add_argument("--fps", type=int, default=15)
     args = parser.parse_args(argv)
     try:
         if args.command == "demo":
@@ -44,6 +59,21 @@ def main(argv=None):
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
             print(json.dumps(result, indent=2))
+        elif args.command == "animate-compression":
+            from .animations import render_compression
+            render_compression(args.source, args.output)
+            print(args.output)
+        elif args.command == "animate-grasp":
+            from .animations import render_grasp
+            render_grasp(args.source, args.comparison, args.output)
+            print(args.output)
+        elif args.command == "adhesion":
+            from .backends.adhesive import run_adhesion
+            print(json.dumps(run_adhesion(args.output, frames=args.frames), indent=2))
+        elif args.command == "robot-demo":
+            from .backends.robot import run_robot
+            print(json.dumps(run_robot(args.output, pressure_pa=args.pressure_pa,
+                                       render=not args.no_render, fps=args.fps), indent=2))
         else:
             from .backends.jax_mpm import run_grasp
             print(json.dumps(run_grasp(args.output, grid=args.grid, frames=args.frames,
